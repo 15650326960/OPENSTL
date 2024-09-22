@@ -1,0 +1,498 @@
+Model info:
+SimVP_Model(
+  (enc): Encoder(
+    (enc): Sequential(
+      (0): ConvSC(
+        (conv): BasicConv2d(
+          (conv): Conv2d(1, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (norm): GroupNorm(2, 32, eps=1e-05, affine=True)
+          (act): SiLU()
+        )
+      )
+      (1): ConvSC(
+        (conv): BasicConv2d(
+          (conv): Conv2d(32, 32, kernel_size=(3, 3), stride=(2, 2), padding=(1, 1))
+          (norm): GroupNorm(2, 32, eps=1e-05, affine=True)
+          (act): SiLU()
+        )
+      )
+    )
+  )
+  (dec): Decoder(
+    (dec): Sequential(
+      (0): ConvSC(
+        (conv): BasicConv2d(
+          (conv): Sequential(
+            (0): Conv2d(32, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+            (1): PixelShuffle(upscale_factor=2)
+          )
+          (norm): GroupNorm(2, 32, eps=1e-05, affine=True)
+          (act): SiLU()
+        )
+      )
+      (1): ConvSC(
+        (conv): BasicConv2d(
+          (conv): Conv2d(32, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (norm): GroupNorm(2, 32, eps=1e-05, affine=True)
+          (act): SiLU()
+        )
+      )
+    )
+    (readout): Conv2d(32, 1, kernel_size=(1, 1), stride=(1, 1))
+  )
+  (hid): MidIncepNet(
+    (enc): Sequential(
+      (0): gInception_ST(
+        (conv1): Conv2d(384, 128, kernel_size=(1, 1), stride=(1, 1))
+        (layers): Sequential(
+          (0): GroupConv2d(
+            (conv): Conv2d(128, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), groups=8)
+            (norm): GroupNorm(8, 256, eps=1e-05, affine=True)
+            (activate): LeakyReLU(negative_slope=0.2, inplace=True)
+          )
+          (1): GroupConv2d(
+            (conv): Conv2d(128, 256, kernel_size=(5, 5), stride=(1, 1), padding=(2, 2), groups=8)
+            (norm): GroupNorm(8, 256, eps=1e-05, affine=True)
+            (activate): LeakyReLU(negative_slope=0.2, inplace=True)
+          )
+          (2): GroupConv2d(
+            (conv): Conv2d(128, 256, kernel_size=(7, 7), stride=(1, 1), padding=(3, 3), groups=8)
+            (norm): GroupNorm(8, 256, eps=1e-05, affine=True)
+            (activate): LeakyReLU(negative_slope=0.2, inplace=True)
+          )
+          (3): GroupConv2d(
+            (conv): Conv2d(128, 256, kernel_size=(11, 11), stride=(1, 1), padding=(5, 5), groups=8)
+            (norm): GroupNorm(8, 256, eps=1e-05, affine=True)
+            (activate): LeakyReLU(negative_slope=0.2, inplace=True)
+          )
+        )
+      )
+      (1): gInception_ST(
+        (conv1): Conv2d(256, 128, kernel_size=(1, 1), stride=(1, 1))
+        (layers): Sequential(
+          (0): GroupConv2d(
+            (conv): Conv2d(128, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), groups=8)
+            (norm): GroupNorm(8, 256, eps=1e-05, affine=True)
+            (activate): LeakyReLU(negative_slope=0.2, inplace=True)
+          )
+          (1): GroupConv2d(
+            (conv): Conv2d(128, 256, kernel_size=(5, 5), stride=(1, 1), padding=(2, 2), groups=8)
+            (norm): GroupNorm(8, 256, eps=1e-05, affine=True)
+            (activate): LeakyReLU(negative_slope=0.2, inplace=True)
+          )
+          (2): GroupConv2d(
+            (conv): Conv2d(128, 256, kernel_size=(7, 7), stride=(1, 1), padding=(3, 3), groups=8)
+            (norm): GroupNorm(8, 256, eps=1e-05, affine=True)
+            (activate): LeakyReLU(negative_slope=0.2, inplace=True)
+          )
+          (3): GroupConv2d(
+            (conv): Conv2d(128, 256, kernel_size=(11, 11), stride=(1, 1), padding=(5, 5), groups=8)
+            (norm): GroupNorm(8, 256, eps=1e-05, affine=True)
+            (activate): LeakyReLU(negative_slope=0.2, inplace=True)
+          )
+        )
+      )
+      (2): gInception_ST(
+        (conv1): Conv2d(256, 128, kernel_size=(1, 1), stride=(1, 1))
+        (layers): Sequential(
+          (0): GroupConv2d(
+            (conv): Conv2d(128, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), groups=8)
+            (norm): GroupNorm(8, 256, eps=1e-05, affine=True)
+            (activate): LeakyReLU(negative_slope=0.2, inplace=True)
+          )
+          (1): GroupConv2d(
+            (conv): Conv2d(128, 256, kernel_size=(5, 5), stride=(1, 1), padding=(2, 2), groups=8)
+            (norm): GroupNorm(8, 256, eps=1e-05, affine=True)
+            (activate): LeakyReLU(negative_slope=0.2, inplace=True)
+          )
+          (2): GroupConv2d(
+            (conv): Conv2d(128, 256, kernel_size=(7, 7), stride=(1, 1), padding=(3, 3), groups=8)
+            (norm): GroupNorm(8, 256, eps=1e-05, affine=True)
+            (activate): LeakyReLU(negative_slope=0.2, inplace=True)
+          )
+          (3): GroupConv2d(
+            (conv): Conv2d(128, 256, kernel_size=(11, 11), stride=(1, 1), padding=(5, 5), groups=8)
+            (norm): GroupNorm(8, 256, eps=1e-05, affine=True)
+            (activate): LeakyReLU(negative_slope=0.2, inplace=True)
+          )
+        )
+      )
+      (3): gInception_ST(
+        (conv1): Conv2d(256, 128, kernel_size=(1, 1), stride=(1, 1))
+        (layers): Sequential(
+          (0): GroupConv2d(
+            (conv): Conv2d(128, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), groups=8)
+            (norm): GroupNorm(8, 256, eps=1e-05, affine=True)
+            (activate): LeakyReLU(negative_slope=0.2, inplace=True)
+          )
+          (1): GroupConv2d(
+            (conv): Conv2d(128, 256, kernel_size=(5, 5), stride=(1, 1), padding=(2, 2), groups=8)
+            (norm): GroupNorm(8, 256, eps=1e-05, affine=True)
+            (activate): LeakyReLU(negative_slope=0.2, inplace=True)
+          )
+          (2): GroupConv2d(
+            (conv): Conv2d(128, 256, kernel_size=(7, 7), stride=(1, 1), padding=(3, 3), groups=8)
+            (norm): GroupNorm(8, 256, eps=1e-05, affine=True)
+            (activate): LeakyReLU(negative_slope=0.2, inplace=True)
+          )
+          (3): GroupConv2d(
+            (conv): Conv2d(128, 256, kernel_size=(11, 11), stride=(1, 1), padding=(5, 5), groups=8)
+            (norm): GroupNorm(8, 256, eps=1e-05, affine=True)
+            (activate): LeakyReLU(negative_slope=0.2, inplace=True)
+          )
+        )
+      )
+      (4): gInception_ST(
+        (conv1): Conv2d(256, 128, kernel_size=(1, 1), stride=(1, 1))
+        (layers): Sequential(
+          (0): GroupConv2d(
+            (conv): Conv2d(128, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), groups=8)
+            (norm): GroupNorm(8, 256, eps=1e-05, affine=True)
+            (activate): LeakyReLU(negative_slope=0.2, inplace=True)
+          )
+          (1): GroupConv2d(
+            (conv): Conv2d(128, 256, kernel_size=(5, 5), stride=(1, 1), padding=(2, 2), groups=8)
+            (norm): GroupNorm(8, 256, eps=1e-05, affine=True)
+            (activate): LeakyReLU(negative_slope=0.2, inplace=True)
+          )
+          (2): GroupConv2d(
+            (conv): Conv2d(128, 256, kernel_size=(7, 7), stride=(1, 1), padding=(3, 3), groups=8)
+            (norm): GroupNorm(8, 256, eps=1e-05, affine=True)
+            (activate): LeakyReLU(negative_slope=0.2, inplace=True)
+          )
+          (3): GroupConv2d(
+            (conv): Conv2d(128, 256, kernel_size=(11, 11), stride=(1, 1), padding=(5, 5), groups=8)
+            (norm): GroupNorm(8, 256, eps=1e-05, affine=True)
+            (activate): LeakyReLU(negative_slope=0.2, inplace=True)
+          )
+        )
+      )
+      (5): gInception_ST(
+        (conv1): Conv2d(256, 128, kernel_size=(1, 1), stride=(1, 1))
+        (layers): Sequential(
+          (0): GroupConv2d(
+            (conv): Conv2d(128, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), groups=8)
+            (norm): GroupNorm(8, 256, eps=1e-05, affine=True)
+            (activate): LeakyReLU(negative_slope=0.2, inplace=True)
+          )
+          (1): GroupConv2d(
+            (conv): Conv2d(128, 256, kernel_size=(5, 5), stride=(1, 1), padding=(2, 2), groups=8)
+            (norm): GroupNorm(8, 256, eps=1e-05, affine=True)
+            (activate): LeakyReLU(negative_slope=0.2, inplace=True)
+          )
+          (2): GroupConv2d(
+            (conv): Conv2d(128, 256, kernel_size=(7, 7), stride=(1, 1), padding=(3, 3), groups=8)
+            (norm): GroupNorm(8, 256, eps=1e-05, affine=True)
+            (activate): LeakyReLU(negative_slope=0.2, inplace=True)
+          )
+          (3): GroupConv2d(
+            (conv): Conv2d(128, 256, kernel_size=(11, 11), stride=(1, 1), padding=(5, 5), groups=8)
+            (norm): GroupNorm(8, 256, eps=1e-05, affine=True)
+            (activate): LeakyReLU(negative_slope=0.2, inplace=True)
+          )
+        )
+      )
+      (6): gInception_ST(
+        (conv1): Conv2d(256, 128, kernel_size=(1, 1), stride=(1, 1))
+        (layers): Sequential(
+          (0): GroupConv2d(
+            (conv): Conv2d(128, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), groups=8)
+            (norm): GroupNorm(8, 256, eps=1e-05, affine=True)
+            (activate): LeakyReLU(negative_slope=0.2, inplace=True)
+          )
+          (1): GroupConv2d(
+            (conv): Conv2d(128, 256, kernel_size=(5, 5), stride=(1, 1), padding=(2, 2), groups=8)
+            (norm): GroupNorm(8, 256, eps=1e-05, affine=True)
+            (activate): LeakyReLU(negative_slope=0.2, inplace=True)
+          )
+          (2): GroupConv2d(
+            (conv): Conv2d(128, 256, kernel_size=(7, 7), stride=(1, 1), padding=(3, 3), groups=8)
+            (norm): GroupNorm(8, 256, eps=1e-05, affine=True)
+            (activate): LeakyReLU(negative_slope=0.2, inplace=True)
+          )
+          (3): GroupConv2d(
+            (conv): Conv2d(128, 256, kernel_size=(11, 11), stride=(1, 1), padding=(5, 5), groups=8)
+            (norm): GroupNorm(8, 256, eps=1e-05, affine=True)
+            (activate): LeakyReLU(negative_slope=0.2, inplace=True)
+          )
+        )
+      )
+      (7): gInception_ST(
+        (conv1): Conv2d(256, 128, kernel_size=(1, 1), stride=(1, 1))
+        (layers): Sequential(
+          (0): GroupConv2d(
+            (conv): Conv2d(128, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), groups=8)
+            (norm): GroupNorm(8, 256, eps=1e-05, affine=True)
+            (activate): LeakyReLU(negative_slope=0.2, inplace=True)
+          )
+          (1): GroupConv2d(
+            (conv): Conv2d(128, 256, kernel_size=(5, 5), stride=(1, 1), padding=(2, 2), groups=8)
+            (norm): GroupNorm(8, 256, eps=1e-05, affine=True)
+            (activate): LeakyReLU(negative_slope=0.2, inplace=True)
+          )
+          (2): GroupConv2d(
+            (conv): Conv2d(128, 256, kernel_size=(7, 7), stride=(1, 1), padding=(3, 3), groups=8)
+            (norm): GroupNorm(8, 256, eps=1e-05, affine=True)
+            (activate): LeakyReLU(negative_slope=0.2, inplace=True)
+          )
+          (3): GroupConv2d(
+            (conv): Conv2d(128, 256, kernel_size=(11, 11), stride=(1, 1), padding=(5, 5), groups=8)
+            (norm): GroupNorm(8, 256, eps=1e-05, affine=True)
+            (activate): LeakyReLU(negative_slope=0.2, inplace=True)
+          )
+        )
+      )
+    )
+    (dec): Sequential(
+      (0): gInception_ST(
+        (conv1): Conv2d(256, 128, kernel_size=(1, 1), stride=(1, 1))
+        (layers): Sequential(
+          (0): GroupConv2d(
+            (conv): Conv2d(128, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), groups=8)
+            (norm): GroupNorm(8, 256, eps=1e-05, affine=True)
+            (activate): LeakyReLU(negative_slope=0.2, inplace=True)
+          )
+          (1): GroupConv2d(
+            (conv): Conv2d(128, 256, kernel_size=(5, 5), stride=(1, 1), padding=(2, 2), groups=8)
+            (norm): GroupNorm(8, 256, eps=1e-05, affine=True)
+            (activate): LeakyReLU(negative_slope=0.2, inplace=True)
+          )
+          (2): GroupConv2d(
+            (conv): Conv2d(128, 256, kernel_size=(7, 7), stride=(1, 1), padding=(3, 3), groups=8)
+            (norm): GroupNorm(8, 256, eps=1e-05, affine=True)
+            (activate): LeakyReLU(negative_slope=0.2, inplace=True)
+          )
+          (3): GroupConv2d(
+            (conv): Conv2d(128, 256, kernel_size=(11, 11), stride=(1, 1), padding=(5, 5), groups=8)
+            (norm): GroupNorm(8, 256, eps=1e-05, affine=True)
+            (activate): LeakyReLU(negative_slope=0.2, inplace=True)
+          )
+        )
+      )
+      (1): gInception_ST(
+        (conv1): Conv2d(512, 128, kernel_size=(1, 1), stride=(1, 1))
+        (layers): Sequential(
+          (0): GroupConv2d(
+            (conv): Conv2d(128, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), groups=8)
+            (norm): GroupNorm(8, 256, eps=1e-05, affine=True)
+            (activate): LeakyReLU(negative_slope=0.2, inplace=True)
+          )
+          (1): GroupConv2d(
+            (conv): Conv2d(128, 256, kernel_size=(5, 5), stride=(1, 1), padding=(2, 2), groups=8)
+            (norm): GroupNorm(8, 256, eps=1e-05, affine=True)
+            (activate): LeakyReLU(negative_slope=0.2, inplace=True)
+          )
+          (2): GroupConv2d(
+            (conv): Conv2d(128, 256, kernel_size=(7, 7), stride=(1, 1), padding=(3, 3), groups=8)
+            (norm): GroupNorm(8, 256, eps=1e-05, affine=True)
+            (activate): LeakyReLU(negative_slope=0.2, inplace=True)
+          )
+          (3): GroupConv2d(
+            (conv): Conv2d(128, 256, kernel_size=(11, 11), stride=(1, 1), padding=(5, 5), groups=8)
+            (norm): GroupNorm(8, 256, eps=1e-05, affine=True)
+            (activate): LeakyReLU(negative_slope=0.2, inplace=True)
+          )
+        )
+      )
+      (2): gInception_ST(
+        (conv1): Conv2d(512, 128, kernel_size=(1, 1), stride=(1, 1))
+        (layers): Sequential(
+          (0): GroupConv2d(
+            (conv): Conv2d(128, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), groups=8)
+            (norm): GroupNorm(8, 256, eps=1e-05, affine=True)
+            (activate): LeakyReLU(negative_slope=0.2, inplace=True)
+          )
+          (1): GroupConv2d(
+            (conv): Conv2d(128, 256, kernel_size=(5, 5), stride=(1, 1), padding=(2, 2), groups=8)
+            (norm): GroupNorm(8, 256, eps=1e-05, affine=True)
+            (activate): LeakyReLU(negative_slope=0.2, inplace=True)
+          )
+          (2): GroupConv2d(
+            (conv): Conv2d(128, 256, kernel_size=(7, 7), stride=(1, 1), padding=(3, 3), groups=8)
+            (norm): GroupNorm(8, 256, eps=1e-05, affine=True)
+            (activate): LeakyReLU(negative_slope=0.2, inplace=True)
+          )
+          (3): GroupConv2d(
+            (conv): Conv2d(128, 256, kernel_size=(11, 11), stride=(1, 1), padding=(5, 5), groups=8)
+            (norm): GroupNorm(8, 256, eps=1e-05, affine=True)
+            (activate): LeakyReLU(negative_slope=0.2, inplace=True)
+          )
+        )
+      )
+      (3): gInception_ST(
+        (conv1): Conv2d(512, 128, kernel_size=(1, 1), stride=(1, 1))
+        (layers): Sequential(
+          (0): GroupConv2d(
+            (conv): Conv2d(128, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), groups=8)
+            (norm): GroupNorm(8, 256, eps=1e-05, affine=True)
+            (activate): LeakyReLU(negative_slope=0.2, inplace=True)
+          )
+          (1): GroupConv2d(
+            (conv): Conv2d(128, 256, kernel_size=(5, 5), stride=(1, 1), padding=(2, 2), groups=8)
+            (norm): GroupNorm(8, 256, eps=1e-05, affine=True)
+            (activate): LeakyReLU(negative_slope=0.2, inplace=True)
+          )
+          (2): GroupConv2d(
+            (conv): Conv2d(128, 256, kernel_size=(7, 7), stride=(1, 1), padding=(3, 3), groups=8)
+            (norm): GroupNorm(8, 256, eps=1e-05, affine=True)
+            (activate): LeakyReLU(negative_slope=0.2, inplace=True)
+          )
+          (3): GroupConv2d(
+            (conv): Conv2d(128, 256, kernel_size=(11, 11), stride=(1, 1), padding=(5, 5), groups=8)
+            (norm): GroupNorm(8, 256, eps=1e-05, affine=True)
+            (activate): LeakyReLU(negative_slope=0.2, inplace=True)
+          )
+        )
+      )
+      (4): gInception_ST(
+        (conv1): Conv2d(512, 128, kernel_size=(1, 1), stride=(1, 1))
+        (layers): Sequential(
+          (0): GroupConv2d(
+            (conv): Conv2d(128, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), groups=8)
+            (norm): GroupNorm(8, 256, eps=1e-05, affine=True)
+            (activate): LeakyReLU(negative_slope=0.2, inplace=True)
+          )
+          (1): GroupConv2d(
+            (conv): Conv2d(128, 256, kernel_size=(5, 5), stride=(1, 1), padding=(2, 2), groups=8)
+            (norm): GroupNorm(8, 256, eps=1e-05, affine=True)
+            (activate): LeakyReLU(negative_slope=0.2, inplace=True)
+          )
+          (2): GroupConv2d(
+            (conv): Conv2d(128, 256, kernel_size=(7, 7), stride=(1, 1), padding=(3, 3), groups=8)
+            (norm): GroupNorm(8, 256, eps=1e-05, affine=True)
+            (activate): LeakyReLU(negative_slope=0.2, inplace=True)
+          )
+          (3): GroupConv2d(
+            (conv): Conv2d(128, 256, kernel_size=(11, 11), stride=(1, 1), padding=(5, 5), groups=8)
+            (norm): GroupNorm(8, 256, eps=1e-05, affine=True)
+            (activate): LeakyReLU(negative_slope=0.2, inplace=True)
+          )
+        )
+      )
+      (5): gInception_ST(
+        (conv1): Conv2d(512, 128, kernel_size=(1, 1), stride=(1, 1))
+        (layers): Sequential(
+          (0): GroupConv2d(
+            (conv): Conv2d(128, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), groups=8)
+            (norm): GroupNorm(8, 256, eps=1e-05, affine=True)
+            (activate): LeakyReLU(negative_slope=0.2, inplace=True)
+          )
+          (1): GroupConv2d(
+            (conv): Conv2d(128, 256, kernel_size=(5, 5), stride=(1, 1), padding=(2, 2), groups=8)
+            (norm): GroupNorm(8, 256, eps=1e-05, affine=True)
+            (activate): LeakyReLU(negative_slope=0.2, inplace=True)
+          )
+          (2): GroupConv2d(
+            (conv): Conv2d(128, 256, kernel_size=(7, 7), stride=(1, 1), padding=(3, 3), groups=8)
+            (norm): GroupNorm(8, 256, eps=1e-05, affine=True)
+            (activate): LeakyReLU(negative_slope=0.2, inplace=True)
+          )
+          (3): GroupConv2d(
+            (conv): Conv2d(128, 256, kernel_size=(11, 11), stride=(1, 1), padding=(5, 5), groups=8)
+            (norm): GroupNorm(8, 256, eps=1e-05, affine=True)
+            (activate): LeakyReLU(negative_slope=0.2, inplace=True)
+          )
+        )
+      )
+      (6): gInception_ST(
+        (conv1): Conv2d(512, 128, kernel_size=(1, 1), stride=(1, 1))
+        (layers): Sequential(
+          (0): GroupConv2d(
+            (conv): Conv2d(128, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), groups=8)
+            (norm): GroupNorm(8, 256, eps=1e-05, affine=True)
+            (activate): LeakyReLU(negative_slope=0.2, inplace=True)
+          )
+          (1): GroupConv2d(
+            (conv): Conv2d(128, 256, kernel_size=(5, 5), stride=(1, 1), padding=(2, 2), groups=8)
+            (norm): GroupNorm(8, 256, eps=1e-05, affine=True)
+            (activate): LeakyReLU(negative_slope=0.2, inplace=True)
+          )
+          (2): GroupConv2d(
+            (conv): Conv2d(128, 256, kernel_size=(7, 7), stride=(1, 1), padding=(3, 3), groups=8)
+            (norm): GroupNorm(8, 256, eps=1e-05, affine=True)
+            (activate): LeakyReLU(negative_slope=0.2, inplace=True)
+          )
+          (3): GroupConv2d(
+            (conv): Conv2d(128, 256, kernel_size=(11, 11), stride=(1, 1), padding=(5, 5), groups=8)
+            (norm): GroupNorm(8, 256, eps=1e-05, affine=True)
+            (activate): LeakyReLU(negative_slope=0.2, inplace=True)
+          )
+        )
+      )
+      (7): gInception_ST(
+        (conv1): Conv2d(512, 128, kernel_size=(1, 1), stride=(1, 1))
+        (layers): Sequential(
+          (0): GroupConv2d(
+            (conv): Conv2d(128, 384, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), groups=8)
+            (norm): GroupNorm(8, 384, eps=1e-05, affine=True)
+            (activate): LeakyReLU(negative_slope=0.2, inplace=True)
+          )
+          (1): GroupConv2d(
+            (conv): Conv2d(128, 384, kernel_size=(5, 5), stride=(1, 1), padding=(2, 2), groups=8)
+            (norm): GroupNorm(8, 384, eps=1e-05, affine=True)
+            (activate): LeakyReLU(negative_slope=0.2, inplace=True)
+          )
+          (2): GroupConv2d(
+            (conv): Conv2d(128, 384, kernel_size=(7, 7), stride=(1, 1), padding=(3, 3), groups=8)
+            (norm): GroupNorm(8, 384, eps=1e-05, affine=True)
+            (activate): LeakyReLU(negative_slope=0.2, inplace=True)
+          )
+          (3): GroupConv2d(
+            (conv): Conv2d(128, 384, kernel_size=(11, 11), stride=(1, 1), padding=(5, 5), groups=8)
+            (norm): GroupNorm(8, 384, eps=1e-05, affine=True)
+            (activate): LeakyReLU(negative_slope=0.2, inplace=True)
+          )
+        )
+      )
+    )
+  )
+)
+| module                 | #parameters or shape   | #flops     |
+|:-----------------------|:-----------------------|:-----------|
+| model                  | 14.666M                | 8.027G     |
+|  enc.enc               |  9.696K                |  68.616M   |
+|   enc.enc.0.conv       |   0.384K               |   11.01M   |
+|    enc.enc.0.conv.conv |    0.32K               |    7.078M  |
+|    enc.enc.0.conv.norm |    64                  |    3.932M  |
+|   enc.enc.1.conv       |   9.312K               |   57.606M  |
+|    enc.enc.1.conv.conv |    9.248K              |    56.623M |
+|    enc.enc.1.conv.norm |    64                  |    0.983M  |
+|  dec                   |  46.401K               |  0.462G    |
+|   dec.dec              |   46.368K              |   0.461G   |
+|    dec.dec.0.conv      |    37.056K             |    0.23G   |
+|    dec.dec.1.conv      |    9.312K              |    0.23G   |
+|   dec.readout          |   33                   |   0.786M   |
+|    dec.readout.weight  |    (1, 32, 1, 1)       |            |
+|    dec.readout.bias    |    (1,)                |            |
+|  hid                   |  14.61M                |  7.497G    |
+|   hid.enc              |   6.989M               |   3.586G   |
+|    hid.enc.0           |    0.888M              |    0.456G  |
+|    hid.enc.1           |    0.872M              |    0.447G  |
+|    hid.enc.2           |    0.872M              |    0.447G  |
+|    hid.enc.3           |    0.872M              |    0.447G  |
+|    hid.enc.4           |    0.872M              |    0.447G  |
+|    hid.enc.5           |    0.872M              |    0.447G  |
+|    hid.enc.6           |    0.872M              |    0.447G  |
+|    hid.enc.7           |    0.872M              |    0.447G  |
+|   hid.dec              |   7.621M               |   3.91G    |
+|    hid.dec.0           |    0.872M              |    0.447G  |
+|    hid.dec.1           |    0.904M              |    0.464G  |
+|    hid.dec.2           |    0.904M              |    0.464G  |
+|    hid.dec.3           |    0.904M              |    0.464G  |
+|    hid.dec.4           |    0.904M              |    0.464G  |
+|    hid.dec.5           |    0.904M              |    0.464G  |
+|    hid.dec.6           |    0.904M              |    0.464G  |
+|    hid.dec.7           |    1.324M              |    0.679G  |
+--------------------------------------------------------------------------------
+1725884530854 husky error 
+  | Name      | Type        | Params | Mode 
+--------------------------------------------------
+0 | model     | SimVP_Model | 14.7 M | train
+1 | criterion | MSELoss     | 0      | train
+--------------------------------------------------
+14.7 M    Trainable params
+0         Non-trainable params
+14.7 M    Total params
+58.664    Total estimated model params size (MB)
+336       Modules in train mode
+0         Modules in eval mode

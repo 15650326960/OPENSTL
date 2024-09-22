@@ -1,0 +1,68 @@
+Model info:
+ConvLSTM_Model(
+  (MSE_criterion): MSELoss()
+  (cell_list): ModuleList(
+    (0): ConvLSTMCell(
+      (conv_x): Sequential(
+        (0): Conv2d(4, 512, kernel_size=(5, 5), stride=(1, 1), padding=(2, 2), bias=False)
+      )
+      (conv_h): Sequential(
+        (0): Conv2d(128, 512, kernel_size=(5, 5), stride=(1, 1), padding=(2, 2), bias=False)
+      )
+      (conv_o): Sequential(
+        (0): Conv2d(256, 128, kernel_size=(5, 5), stride=(1, 1), padding=(2, 2), bias=False)
+      )
+      (conv_last): Conv2d(256, 128, kernel_size=(1, 1), stride=(1, 1), bias=False)
+    )
+    (1-3): 3 x ConvLSTMCell(
+      (conv_x): Sequential(
+        (0): Conv2d(128, 512, kernel_size=(5, 5), stride=(1, 1), padding=(2, 2), bias=False)
+      )
+      (conv_h): Sequential(
+        (0): Conv2d(128, 512, kernel_size=(5, 5), stride=(1, 1), padding=(2, 2), bias=False)
+      )
+      (conv_o): Sequential(
+        (0): Conv2d(256, 128, kernel_size=(5, 5), stride=(1, 1), padding=(2, 2), bias=False)
+      )
+      (conv_last): Conv2d(256, 128, kernel_size=(1, 1), stride=(1, 1), bias=False)
+    )
+  )
+  (conv_last): Conv2d(128, 4, kernel_size=(1, 1), stride=(1, 1), bias=False)
+)
+| module                   | #parameters or shape   | #flops     |
+|:-------------------------|:-----------------------|:-----------|
+| model                    | 14.928M                | 0.136T     |
+|  cell_list               |  14.928M               |  0.136T    |
+|   cell_list.0            |   2.542M               |   19.897G  |
+|    cell_list.0.conv_x.0  |    51.2K               |    0.603G  |
+|    cell_list.0.conv_h.0  |    1.638M              |    19.294G |
+|    cell_list.0.conv_o.0  |    0.819M              |            |
+|    cell_list.0.conv_last |    32.768K             |            |
+|   cell_list.1            |   4.129M               |   38.588G  |
+|    cell_list.1.conv_x.0  |    1.638M              |    19.294G |
+|    cell_list.1.conv_h.0  |    1.638M              |    19.294G |
+|    cell_list.1.conv_o.0  |    0.819M              |            |
+|    cell_list.1.conv_last |    32.768K             |            |
+|   cell_list.2            |   4.129M               |   38.588G  |
+|    cell_list.2.conv_x.0  |    1.638M              |    19.294G |
+|    cell_list.2.conv_h.0  |    1.638M              |    19.294G |
+|    cell_list.2.conv_o.0  |    0.819M              |            |
+|    cell_list.2.conv_last |    32.768K             |            |
+|   cell_list.3            |   4.129M               |   38.588G  |
+|    cell_list.3.conv_x.0  |    1.638M              |    19.294G |
+|    cell_list.3.conv_h.0  |    1.638M              |    19.294G |
+|    cell_list.3.conv_o.0  |    0.819M              |            |
+|    cell_list.3.conv_last |    32.768K             |            |
+|  conv_last               |  0.512K                |  6.029M    |
+|   conv_last.weight       |   (4, 128, 1, 1)       |            |
+--------------------------------------------------------------------------------
+1725633588027 tiger error 
+  | Name      | Type           | Params
+---------------------------------------------
+0 | model     | ConvLSTM_Model | 14.9 M
+1 | criterion | MSELoss        | 0     
+---------------------------------------------
+14.9 M    Trainable params
+0         Non-trainable params
+14.9 M    Total params
+59.714    Total estimated model params size (MB)

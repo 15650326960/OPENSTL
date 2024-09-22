@@ -1,0 +1,288 @@
+Model info:
+SimVP_Model(
+  (enc): Encoder(
+    (enc): Sequential(
+      (0): ConvSC(
+        (conv): BasicConv2d(
+          (conv): Conv2d(1, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (norm): GroupNorm(2, 32, eps=1e-05, affine=True)
+          (act): SiLU()
+        )
+      )
+      (1): ConvSC(
+        (conv): BasicConv2d(
+          (conv): Conv2d(32, 32, kernel_size=(3, 3), stride=(2, 2), padding=(1, 1))
+          (norm): GroupNorm(2, 32, eps=1e-05, affine=True)
+          (act): SiLU()
+        )
+      )
+    )
+  )
+  (dec): Decoder(
+    (dec): Sequential(
+      (0): ConvSC(
+        (conv): BasicConv2d(
+          (conv): Sequential(
+            (0): Conv2d(32, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+            (1): PixelShuffle(upscale_factor=2)
+          )
+          (norm): GroupNorm(2, 32, eps=1e-05, affine=True)
+          (act): SiLU()
+        )
+      )
+      (1): ConvSC(
+        (conv): BasicConv2d(
+          (conv): Conv2d(32, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (norm): GroupNorm(2, 32, eps=1e-05, affine=True)
+          (act): SiLU()
+        )
+      )
+    )
+    (readout): Conv2d(32, 1, kernel_size=(1, 1), stride=(1, 1))
+  )
+  (hid): MidMetaNet(
+    (enc): Sequential(
+      (0): MetaBlock(
+        (block): CBlock(
+          (pos_embed): Conv2d(384, 384, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), groups=384)
+          (norm1): BatchNorm2d(384, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+          (conv1): Conv2d(384, 384, kernel_size=(1, 1), stride=(1, 1))
+          (conv2): Conv2d(384, 384, kernel_size=(1, 1), stride=(1, 1))
+          (attn): Conv2d(384, 384, kernel_size=(5, 5), stride=(1, 1), padding=(2, 2), groups=384)
+          (drop_path): DropPath(drop_prob=0.010)
+          (norm2): BatchNorm2d(384, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+          (mlp): CMlp(
+            (fc1): Conv2d(384, 3072, kernel_size=(1, 1), stride=(1, 1))
+            (act): GELU(approximate='none')
+            (fc2): Conv2d(3072, 384, kernel_size=(1, 1), stride=(1, 1))
+            (drop): Dropout(p=0.0, inplace=False)
+          )
+        )
+        (reduction): Conv2d(384, 256, kernel_size=(1, 1), stride=(1, 1))
+      )
+      (1): MetaBlock(
+        (block): SABlock(
+          (pos_embed): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), groups=256)
+          (norm1): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+          (attn): Attention(
+            (qkv): Linear(in_features=256, out_features=768, bias=True)
+            (attn_drop): Dropout(p=0.0, inplace=False)
+            (proj): Linear(in_features=256, out_features=256, bias=True)
+            (proj_drop): Dropout(p=0.0, inplace=False)
+          )
+          (drop_path): DropPath(drop_prob=0.023)
+          (norm2): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+          (mlp): Mlp(
+            (fc1): Linear(in_features=256, out_features=2048, bias=True)
+            (act): GELU(approximate='none')
+            (fc2): Linear(in_features=2048, out_features=256, bias=True)
+            (drop): Dropout(p=0.0, inplace=False)
+          )
+        )
+      )
+      (2): MetaBlock(
+        (block): SABlock(
+          (pos_embed): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), groups=256)
+          (norm1): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+          (attn): Attention(
+            (qkv): Linear(in_features=256, out_features=768, bias=True)
+            (attn_drop): Dropout(p=0.0, inplace=False)
+            (proj): Linear(in_features=256, out_features=256, bias=True)
+            (proj_drop): Dropout(p=0.0, inplace=False)
+          )
+          (drop_path): DropPath(drop_prob=0.036)
+          (norm2): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+          (mlp): Mlp(
+            (fc1): Linear(in_features=256, out_features=2048, bias=True)
+            (act): GELU(approximate='none')
+            (fc2): Linear(in_features=2048, out_features=256, bias=True)
+            (drop): Dropout(p=0.0, inplace=False)
+          )
+        )
+      )
+      (3): MetaBlock(
+        (block): SABlock(
+          (pos_embed): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), groups=256)
+          (norm1): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+          (attn): Attention(
+            (qkv): Linear(in_features=256, out_features=768, bias=True)
+            (attn_drop): Dropout(p=0.0, inplace=False)
+            (proj): Linear(in_features=256, out_features=256, bias=True)
+            (proj_drop): Dropout(p=0.0, inplace=False)
+          )
+          (drop_path): DropPath(drop_prob=0.049)
+          (norm2): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+          (mlp): Mlp(
+            (fc1): Linear(in_features=256, out_features=2048, bias=True)
+            (act): GELU(approximate='none')
+            (fc2): Linear(in_features=2048, out_features=256, bias=True)
+            (drop): Dropout(p=0.0, inplace=False)
+          )
+        )
+      )
+      (4): MetaBlock(
+        (block): SABlock(
+          (pos_embed): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), groups=256)
+          (norm1): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+          (attn): Attention(
+            (qkv): Linear(in_features=256, out_features=768, bias=True)
+            (attn_drop): Dropout(p=0.0, inplace=False)
+            (proj): Linear(in_features=256, out_features=256, bias=True)
+            (proj_drop): Dropout(p=0.0, inplace=False)
+          )
+          (drop_path): DropPath(drop_prob=0.061)
+          (norm2): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+          (mlp): Mlp(
+            (fc1): Linear(in_features=256, out_features=2048, bias=True)
+            (act): GELU(approximate='none')
+            (fc2): Linear(in_features=2048, out_features=256, bias=True)
+            (drop): Dropout(p=0.0, inplace=False)
+          )
+        )
+      )
+      (5): MetaBlock(
+        (block): SABlock(
+          (pos_embed): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), groups=256)
+          (norm1): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+          (attn): Attention(
+            (qkv): Linear(in_features=256, out_features=768, bias=True)
+            (attn_drop): Dropout(p=0.0, inplace=False)
+            (proj): Linear(in_features=256, out_features=256, bias=True)
+            (proj_drop): Dropout(p=0.0, inplace=False)
+          )
+          (drop_path): DropPath(drop_prob=0.074)
+          (norm2): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+          (mlp): Mlp(
+            (fc1): Linear(in_features=256, out_features=2048, bias=True)
+            (act): GELU(approximate='none')
+            (fc2): Linear(in_features=2048, out_features=256, bias=True)
+            (drop): Dropout(p=0.0, inplace=False)
+          )
+        )
+      )
+      (6): MetaBlock(
+        (block): SABlock(
+          (pos_embed): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), groups=256)
+          (norm1): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+          (attn): Attention(
+            (qkv): Linear(in_features=256, out_features=768, bias=True)
+            (attn_drop): Dropout(p=0.0, inplace=False)
+            (proj): Linear(in_features=256, out_features=256, bias=True)
+            (proj_drop): Dropout(p=0.0, inplace=False)
+          )
+          (drop_path): DropPath(drop_prob=0.087)
+          (norm2): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+          (mlp): Mlp(
+            (fc1): Linear(in_features=256, out_features=2048, bias=True)
+            (act): GELU(approximate='none')
+            (fc2): Linear(in_features=2048, out_features=256, bias=True)
+            (drop): Dropout(p=0.0, inplace=False)
+          )
+        )
+      )
+      (7): MetaBlock(
+        (block): CBlock(
+          (pos_embed): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), groups=256)
+          (norm1): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+          (conv1): Conv2d(256, 256, kernel_size=(1, 1), stride=(1, 1))
+          (conv2): Conv2d(256, 256, kernel_size=(1, 1), stride=(1, 1))
+          (attn): Conv2d(256, 256, kernel_size=(5, 5), stride=(1, 1), padding=(2, 2), groups=256)
+          (drop_path): DropPath(drop_prob=0.100)
+          (norm2): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+          (mlp): CMlp(
+            (fc1): Conv2d(256, 2048, kernel_size=(1, 1), stride=(1, 1))
+            (act): GELU(approximate='none')
+            (fc2): Conv2d(2048, 256, kernel_size=(1, 1), stride=(1, 1))
+            (drop): Dropout(p=0.0, inplace=False)
+          )
+        )
+        (reduction): Conv2d(256, 384, kernel_size=(1, 1), stride=(1, 1))
+      )
+    )
+  )
+)
+| module                       | #parameters or shape   | #flops     |
+|:-----------------------------|:-----------------------|:-----------|
+| model                        | 12.029M                | 7.455G     |
+|  enc.enc                     |  9.696K                |  68.616M   |
+|   enc.enc.0.conv             |   0.384K               |   11.01M   |
+|    enc.enc.0.conv.conv       |    0.32K               |    7.078M  |
+|    enc.enc.0.conv.norm       |    64                  |    3.932M  |
+|   enc.enc.1.conv             |   9.312K               |   57.606M  |
+|    enc.enc.1.conv.conv       |    9.248K              |    56.623M |
+|    enc.enc.1.conv.norm       |    64                  |    0.983M  |
+|  dec                         |  46.401K               |  0.462G    |
+|   dec.dec                    |   46.368K              |   0.461G   |
+|    dec.dec.0.conv            |    37.056K             |    0.23G   |
+|    dec.dec.1.conv            |    9.312K              |    0.23G   |
+|   dec.readout                |   33                   |   0.786M   |
+|    dec.readout.weight        |    (1, 32, 1, 1)       |            |
+|    dec.readout.bias          |    (1,)                |            |
+|  hid.enc                     |  11.973M               |  6.925G    |
+|   hid.enc.0                  |   2.772M               |   1.418G   |
+|    hid.enc.0.block           |    2.674M              |    1.368G  |
+|    hid.enc.0.reduction       |    98.56K              |    50.332M |
+|   hid.enc.1.block            |   1.318M               |   0.808G   |
+|    hid.enc.1.block.gamma_1   |    (256,)              |            |
+|    hid.enc.1.block.gamma_2   |    (256,)              |            |
+|    hid.enc.1.block.pos_embed |    2.56K               |    1.18M   |
+|    hid.enc.1.block.norm1     |    0.512K              |    0.655M  |
+|    hid.enc.1.block.attn      |    0.263M              |    0.268G  |
+|    hid.enc.1.block.norm2     |    0.512K              |    0.655M  |
+|    hid.enc.1.block.mlp       |    1.051M              |    0.537G  |
+|   hid.enc.2.block            |   1.318M               |   0.808G   |
+|    hid.enc.2.block.gamma_1   |    (256,)              |            |
+|    hid.enc.2.block.gamma_2   |    (256,)              |            |
+|    hid.enc.2.block.pos_embed |    2.56K               |    1.18M   |
+|    hid.enc.2.block.norm1     |    0.512K              |    0.655M  |
+|    hid.enc.2.block.attn      |    0.263M              |    0.268G  |
+|    hid.enc.2.block.norm2     |    0.512K              |    0.655M  |
+|    hid.enc.2.block.mlp       |    1.051M              |    0.537G  |
+|   hid.enc.3.block            |   1.318M               |   0.808G   |
+|    hid.enc.3.block.gamma_1   |    (256,)              |            |
+|    hid.enc.3.block.gamma_2   |    (256,)              |            |
+|    hid.enc.3.block.pos_embed |    2.56K               |    1.18M   |
+|    hid.enc.3.block.norm1     |    0.512K              |    0.655M  |
+|    hid.enc.3.block.attn      |    0.263M              |    0.268G  |
+|    hid.enc.3.block.norm2     |    0.512K              |    0.655M  |
+|    hid.enc.3.block.mlp       |    1.051M              |    0.537G  |
+|   hid.enc.4.block            |   1.318M               |   0.808G   |
+|    hid.enc.4.block.gamma_1   |    (256,)              |            |
+|    hid.enc.4.block.gamma_2   |    (256,)              |            |
+|    hid.enc.4.block.pos_embed |    2.56K               |    1.18M   |
+|    hid.enc.4.block.norm1     |    0.512K              |    0.655M  |
+|    hid.enc.4.block.attn      |    0.263M              |    0.268G  |
+|    hid.enc.4.block.norm2     |    0.512K              |    0.655M  |
+|    hid.enc.4.block.mlp       |    1.051M              |    0.537G  |
+|   hid.enc.5.block            |   1.318M               |   0.808G   |
+|    hid.enc.5.block.gamma_1   |    (256,)              |            |
+|    hid.enc.5.block.gamma_2   |    (256,)              |            |
+|    hid.enc.5.block.pos_embed |    2.56K               |    1.18M   |
+|    hid.enc.5.block.norm1     |    0.512K              |    0.655M  |
+|    hid.enc.5.block.attn      |    0.263M              |    0.268G  |
+|    hid.enc.5.block.norm2     |    0.512K              |    0.655M  |
+|    hid.enc.5.block.mlp       |    1.051M              |    0.537G  |
+|   hid.enc.6.block            |   1.318M               |   0.808G   |
+|    hid.enc.6.block.gamma_1   |    (256,)              |            |
+|    hid.enc.6.block.gamma_2   |    (256,)              |            |
+|    hid.enc.6.block.pos_embed |    2.56K               |    1.18M   |
+|    hid.enc.6.block.norm1     |    0.512K              |    0.655M  |
+|    hid.enc.6.block.attn      |    0.263M              |    0.268G  |
+|    hid.enc.6.block.norm2     |    0.512K              |    0.655M  |
+|    hid.enc.6.block.mlp       |    1.051M              |    0.537G  |
+|   hid.enc.7                  |   1.291M               |   0.66G    |
+|    hid.enc.7.block           |    1.193M              |    0.61G   |
+|    hid.enc.7.reduction       |    98.688K             |    50.332M |
+--------------------------------------------------------------------------------
+1726018891864 deer error 
+  | Name      | Type        | Params | Mode 
+--------------------------------------------------
+0 | model     | SimVP_Model | 12.0 M | train
+1 | criterion | MSELoss     | 0      | train
+--------------------------------------------------
+12.0 M    Trainable params
+0         Non-trainable params
+12.0 M    Total params
+48.115    Total estimated model params size (MB)
+157       Modules in train mode
+0         Modules in eval mode

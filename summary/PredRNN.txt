@@ -1,0 +1,80 @@
+Model info:
+PredRNN_Model(
+  (MSE_criterion): MSELoss()
+  (cell_list): ModuleList(
+    (0): SpatioTemporalLSTMCell(
+      (conv_x): Sequential(
+        (0): Conv2d(4, 896, kernel_size=(5, 5), stride=(1, 1), padding=(2, 2), bias=False)
+      )
+      (conv_h): Sequential(
+        (0): Conv2d(128, 512, kernel_size=(5, 5), stride=(1, 1), padding=(2, 2), bias=False)
+      )
+      (conv_m): Sequential(
+        (0): Conv2d(128, 384, kernel_size=(5, 5), stride=(1, 1), padding=(2, 2), bias=False)
+      )
+      (conv_o): Sequential(
+        (0): Conv2d(256, 128, kernel_size=(5, 5), stride=(1, 1), padding=(2, 2), bias=False)
+      )
+      (conv_last): Conv2d(256, 128, kernel_size=(1, 1), stride=(1, 1), bias=False)
+    )
+    (1-3): 3 x SpatioTemporalLSTMCell(
+      (conv_x): Sequential(
+        (0): Conv2d(128, 896, kernel_size=(5, 5), stride=(1, 1), padding=(2, 2), bias=False)
+      )
+      (conv_h): Sequential(
+        (0): Conv2d(128, 512, kernel_size=(5, 5), stride=(1, 1), padding=(2, 2), bias=False)
+      )
+      (conv_m): Sequential(
+        (0): Conv2d(128, 384, kernel_size=(5, 5), stride=(1, 1), padding=(2, 2), bias=False)
+      )
+      (conv_o): Sequential(
+        (0): Conv2d(256, 128, kernel_size=(5, 5), stride=(1, 1), padding=(2, 2), bias=False)
+      )
+      (conv_last): Conv2d(256, 128, kernel_size=(1, 1), stride=(1, 1), bias=False)
+    )
+  )
+  (conv_last): Conv2d(128, 4, kernel_size=(1, 1), stride=(1, 1), bias=False)
+)
+| module                   | #parameters or shape   | #flops     |
+|:-------------------------|:-----------------------|:-----------|
+| model                    | 23.568M                | 0.278T     |
+|  cell_list               |  23.568M               |  0.278T    |
+|   cell_list.0            |   3.809M               |   44.852G  |
+|    cell_list.0.conv_x.0  |    89.6K               |    1.055G  |
+|    cell_list.0.conv_h.0  |    1.638M              |    19.294G |
+|    cell_list.0.conv_m.0  |    1.229M              |    14.47G  |
+|    cell_list.0.conv_o.0  |    0.819M              |    9.647G  |
+|    cell_list.0.conv_last |    32.768K             |    0.386G  |
+|   cell_list.1            |   6.586M               |   77.561G  |
+|    cell_list.1.conv_x.0  |    2.867M              |    33.764G |
+|    cell_list.1.conv_h.0  |    1.638M              |    19.294G |
+|    cell_list.1.conv_m.0  |    1.229M              |    14.47G  |
+|    cell_list.1.conv_o.0  |    0.819M              |    9.647G  |
+|    cell_list.1.conv_last |    32.768K             |    0.386G  |
+|   cell_list.2            |   6.586M               |   77.561G  |
+|    cell_list.2.conv_x.0  |    2.867M              |    33.764G |
+|    cell_list.2.conv_h.0  |    1.638M              |    19.294G |
+|    cell_list.2.conv_m.0  |    1.229M              |    14.47G  |
+|    cell_list.2.conv_o.0  |    0.819M              |    9.647G  |
+|    cell_list.2.conv_last |    32.768K             |    0.386G  |
+|   cell_list.3            |   6.586M               |   77.561G  |
+|    cell_list.3.conv_x.0  |    2.867M              |    33.764G |
+|    cell_list.3.conv_h.0  |    1.638M              |    19.294G |
+|    cell_list.3.conv_m.0  |    1.229M              |    14.47G  |
+|    cell_list.3.conv_o.0  |    0.819M              |    9.647G  |
+|    cell_list.3.conv_last |    32.768K             |    0.386G  |
+|  conv_last               |  0.512K                |  6.029M    |
+|   conv_last.weight       |   (4, 128, 1, 1)       |            |
+--------------------------------------------------------------------------------
+1725772494630 panda error 
+  | Name      | Type          | Params | Mode 
+----------------------------------------------------
+0 | model     | PredRNN_Model | 23.6 M | train
+1 | criterion | MSELoss       | 0      | train
+----------------------------------------------------
+23.6 M    Trainable params
+0         Non-trainable params
+23.6 M    Total params
+94.274    Total estimated model params size (MB)
+45        Modules in train mode
+0         Modules in eval mode

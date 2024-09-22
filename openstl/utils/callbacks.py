@@ -6,7 +6,7 @@ from lightning.pytorch.callbacks import Callback, ModelCheckpoint
 from .main_utils import check_dir, collect_env, print_log, output_namespace
 from clearml import Task, Logger
 
-task =Task.init(project_name="OpenSTL", task_name="weather_tp_debug")
+task =Task.init(project_name="OpenSTL", task_name="weather_tp_SimVP_Poolformer_MOE_debug")
 summary_writer = Logger.current_logger() 
 
 class SetupCallback(Callback):
@@ -50,7 +50,7 @@ class SetupCallback(Callback):
 
 class EpochEndCallback(Callback):
     def __init__(self):
-        # 初始化 avg_train_loss 为 None
+        #初始化 avg_train_loss 为 None
         self.avg_train_loss = None
 
     def on_train_epoch_end(self, trainer, pl_module, outputs=None):
@@ -69,14 +69,9 @@ class EpochEndCallback(Callback):
         if self.avg_train_loss is not None:
             summary_writer.report_scalar(title='Train_loss', series='Train_loss', value=self.avg_train_loss.item(), iteration=trainer.current_epoch)
         summary_writer.report_scalar(title='Vali_loss', series='Vali_loss', value=avg_val_loss.item(), iteration=trainer.current_epoch)
-
+        # if hasattr(self, 'avg_train_loss'):
+        #     print_log(f"Epoch {trainer.current_epoch}: Lr: {lr:.7f} | Train Loss: {self.avg_train_loss:.7f} | Vali Loss: {avg_val_loss:.7f}")
                    
-# lossinfo = {
-        #     'Lr': lr,
-        #     'Train_loss': self.avg_train_loss.item(),
-        #     'Vali_loss': avg_val_loss.item(),
-        # } 
-        # for tag, value in lossinfo.items():
        
 class BestCheckpointCallback(ModelCheckpoint):
     def on_validation_epoch_end(self, trainer, pl_module):

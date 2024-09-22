@@ -25,8 +25,8 @@ def create_parser():
                         help='whether to set deterministic options for CUDNN backend (reproducable)')
 
     # dataset parameters
-    parser.add_argument('--batch_size', '-b', default=32, type=int, help='Training batch size')
-    parser.add_argument('--val_batch_size', '-vb', default=32, type=int, help='Validation batch size')
+    parser.add_argument('--batch_size', '-b', default=128, type=int, help='Training batch size')
+    parser.add_argument('--val_batch_size', '-vb', default=128, type=int, help='Validation batch size')
     parser.add_argument('--num_workers', default=4, type=int)
     parser.add_argument('--data_root', default='/scratch/jianhao/data')
     parser.add_argument('--dataname', '-d', default='mmnist', type=str,

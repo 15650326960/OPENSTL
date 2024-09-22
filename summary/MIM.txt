@@ -1,0 +1,120 @@
+Model info:
+MIM_Model(
+  (MSE_criterion): MSELoss()
+  (stlstm_layer): ModuleList(
+    (0): SpatioTemporalLSTMCell(
+      (conv_x): Sequential(
+        (0): Conv2d(16, 896, kernel_size=(5, 5), stride=(1, 1), padding=(2, 2), bias=False)
+      )
+      (conv_h): Sequential(
+        (0): Conv2d(128, 512, kernel_size=(5, 5), stride=(1, 1), padding=(2, 2), bias=False)
+      )
+      (conv_m): Sequential(
+        (0): Conv2d(128, 384, kernel_size=(5, 5), stride=(1, 1), padding=(2, 2), bias=False)
+      )
+      (conv_o): Sequential(
+        (0): Conv2d(256, 128, kernel_size=(5, 5), stride=(1, 1), padding=(2, 2), bias=False)
+      )
+      (conv_last): Conv2d(256, 128, kernel_size=(1, 1), stride=(1, 1), bias=False)
+    )
+    (1-3): 3 x MIMBlock(
+      (conv_t_cc): Sequential(
+        (0): Conv2d(128, 384, kernel_size=(5, 5), stride=(1, 1), padding=(2, 2), bias=False)
+      )
+      (conv_s_cc): Sequential(
+        (0): Conv2d(128, 512, kernel_size=(5, 5), stride=(1, 1), padding=(2, 2), bias=False)
+      )
+      (conv_x_cc): Sequential(
+        (0): Conv2d(128, 512, kernel_size=(5, 5), stride=(1, 1), padding=(2, 2), bias=False)
+      )
+      (conv_h_concat): Sequential(
+        (0): Conv2d(128, 512, kernel_size=(5, 5), stride=(1, 1), padding=(2, 2), bias=False)
+      )
+      (conv_x_concat): Sequential(
+        (0): Conv2d(128, 512, kernel_size=(5, 5), stride=(1, 1), padding=(2, 2), bias=False)
+      )
+      (conv_last): Conv2d(256, 128, kernel_size=(1, 1), stride=(1, 1), bias=False)
+    )
+  )
+  (stlstm_layer_diff): ModuleList(
+    (0-2): 3 x MIMN(
+      (conv_h_concat): Sequential(
+        (0): Conv2d(128, 512, kernel_size=(5, 5), stride=(1, 1), padding=(2, 2), bias=False)
+      )
+      (conv_x_concat): Sequential(
+        (0): Conv2d(128, 512, kernel_size=(5, 5), stride=(1, 1), padding=(2, 2), bias=False)
+      )
+      (conv_last): Conv2d(256, 128, kernel_size=(1, 1), stride=(1, 1), bias=False)
+    )
+  )
+  (conv_last): Conv2d(128, 16, kernel_size=(1, 1), stride=(1, 1), bias=False)
+)
+| module                                 | #parameters or shape   | #flops     |
+|:---------------------------------------|:-----------------------|:-----------|
+| model                                  | 37.749M                | 0.109T     |
+|  stlstm_layer                          |  27.671M               |  81.028G   |
+|   stlstm_layer.0                       |   4.078M               |   12.004G  |
+|    stlstm_layer.0.conv_x.0             |    0.358M              |    1.055G  |
+|    stlstm_layer.0.conv_h.0             |    1.638M              |    4.823G  |
+|    stlstm_layer.0.conv_m.0             |    1.229M              |    3.618G  |
+|    stlstm_layer.0.conv_o.0             |    0.819M              |    2.412G  |
+|    stlstm_layer.0.conv_last            |    32.768K             |    96.469M |
+|   stlstm_layer.1                       |   7.864M               |   23.008G  |
+|    stlstm_layer.1.ct_weight            |    (256, 8, 16)        |            |
+|    stlstm_layer.1.oc_weight            |    (128, 8, 16)        |            |
+|    stlstm_layer.1.conv_t_cc.0          |    1.229M              |    3.618G  |
+|    stlstm_layer.1.conv_s_cc.0          |    1.638M              |    4.823G  |
+|    stlstm_layer.1.conv_x_cc.0          |    1.638M              |    4.823G  |
+|    stlstm_layer.1.conv_h_concat.0      |    1.638M              |    4.823G  |
+|    stlstm_layer.1.conv_x_concat.0      |    1.638M              |    4.823G  |
+|    stlstm_layer.1.conv_last            |    32.768K             |    96.469M |
+|   stlstm_layer.2                       |   7.864M               |   23.008G  |
+|    stlstm_layer.2.ct_weight            |    (256, 8, 16)        |            |
+|    stlstm_layer.2.oc_weight            |    (128, 8, 16)        |            |
+|    stlstm_layer.2.conv_t_cc.0          |    1.229M              |    3.618G  |
+|    stlstm_layer.2.conv_s_cc.0          |    1.638M              |    4.823G  |
+|    stlstm_layer.2.conv_x_cc.0          |    1.638M              |    4.823G  |
+|    stlstm_layer.2.conv_h_concat.0      |    1.638M              |    4.823G  |
+|    stlstm_layer.2.conv_x_concat.0      |    1.638M              |    4.823G  |
+|    stlstm_layer.2.conv_last            |    32.768K             |    96.469M |
+|   stlstm_layer.3                       |   7.864M               |   23.008G  |
+|    stlstm_layer.3.ct_weight            |    (256, 8, 16)        |            |
+|    stlstm_layer.3.oc_weight            |    (128, 8, 16)        |            |
+|    stlstm_layer.3.conv_t_cc.0          |    1.229M              |    3.618G  |
+|    stlstm_layer.3.conv_s_cc.0          |    1.638M              |    4.823G  |
+|    stlstm_layer.3.conv_x_cc.0          |    1.638M              |    4.823G  |
+|    stlstm_layer.3.conv_h_concat.0      |    1.638M              |    4.823G  |
+|    stlstm_layer.3.conv_x_concat.0      |    1.638M              |    4.823G  |
+|    stlstm_layer.3.conv_last            |    32.768K             |    96.469M |
+|  stlstm_layer_diff                     |  10.076M               |  27.682G   |
+|   stlstm_layer_diff.0                  |   3.359M               |   9.227G   |
+|    stlstm_layer_diff.0.ct_weight       |    (256, 8, 16)        |            |
+|    stlstm_layer_diff.0.oc_weight       |    (128, 8, 16)        |            |
+|    stlstm_layer_diff.0.conv_h_concat.0 |    1.638M              |    4.614G  |
+|    stlstm_layer_diff.0.conv_x_concat.0 |    1.638M              |    4.614G  |
+|    stlstm_layer_diff.0.conv_last       |    32.768K             |            |
+|   stlstm_layer_diff.1                  |   3.359M               |   9.227G   |
+|    stlstm_layer_diff.1.ct_weight       |    (256, 8, 16)        |            |
+|    stlstm_layer_diff.1.oc_weight       |    (128, 8, 16)        |            |
+|    stlstm_layer_diff.1.conv_h_concat.0 |    1.638M              |    4.614G  |
+|    stlstm_layer_diff.1.conv_x_concat.0 |    1.638M              |    4.614G  |
+|    stlstm_layer_diff.1.conv_last       |    32.768K             |            |
+|   stlstm_layer_diff.2                  |   3.359M               |   9.227G   |
+|    stlstm_layer_diff.2.ct_weight       |    (256, 8, 16)        |            |
+|    stlstm_layer_diff.2.oc_weight       |    (128, 8, 16)        |            |
+|    stlstm_layer_diff.2.conv_h_concat.0 |    1.638M              |    4.614G  |
+|    stlstm_layer_diff.2.conv_x_concat.0 |    1.638M              |    4.614G  |
+|    stlstm_layer_diff.2.conv_last       |    32.768K             |            |
+|  conv_last                             |  2.048K                |  6.029M    |
+|   conv_last.weight                     |   (16, 128, 1, 1)      |            |
+--------------------------------------------------------------------------------
+1726368989586 lion error 
+  | Name      | Type      | Params
+----------------------------------------
+0 | model     | MIM_Model | 37.7 M
+1 | criterion | MSELoss   | 0     
+----------------------------------------
+37.7 M    Trainable params
+0         Non-trainable params
+37.7 M    Total params
+150.995   Total estimated model params size (MB)

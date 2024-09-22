@@ -1,0 +1,217 @@
+Model info:
+PhyDNet_Model(
+  (phycell): PhyCell(
+    (cell_list): ModuleList(
+      (0): PhyCell_Cell(
+        (F): Sequential(
+          (conv1): Conv2d(64, 49, kernel_size=(7, 7), stride=(1, 1), padding=(3, 3))
+          (bn1): GroupNorm(7, 49, eps=1e-05, affine=True)
+          (conv2): Conv2d(49, 64, kernel_size=(1, 1), stride=(1, 1))
+        )
+        (convgate): Conv2d(128, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+      )
+    )
+  )
+  (convcell): PhyD_ConvLSTM(
+    (cell_list): ModuleList(
+      (0): PhyD_ConvLSTM_Cell(
+        (conv): Conv2d(192, 512, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+      )
+      (1): PhyD_ConvLSTM_Cell(
+        (conv): Conv2d(256, 512, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+      )
+      (2): PhyD_ConvLSTM_Cell(
+        (conv): Conv2d(192, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+      )
+    )
+  )
+  (encoder): PhyD_EncoderRNN(
+    (encoder_E): encoder_E(
+      (c1): dcgan_conv(
+        (main): Sequential(
+          (0): Conv2d(1, 32, kernel_size=(3, 3), stride=(2, 2), padding=(1, 1))
+          (1): GroupNorm(16, 32, eps=1e-05, affine=True)
+          (2): LeakyReLU(negative_slope=0.2, inplace=True)
+        )
+      )
+      (c2): dcgan_conv(
+        (main): Sequential(
+          (0): Conv2d(32, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (1): GroupNorm(16, 32, eps=1e-05, affine=True)
+          (2): LeakyReLU(negative_slope=0.2, inplace=True)
+        )
+      )
+      (c3): dcgan_conv(
+        (main): Sequential(
+          (0): Conv2d(32, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (1): GroupNorm(16, 64, eps=1e-05, affine=True)
+          (2): LeakyReLU(negative_slope=0.2, inplace=True)
+        )
+      )
+    )
+    (encoder_Ep): encoder_specific(
+      (c1): dcgan_conv(
+        (main): Sequential(
+          (0): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (1): GroupNorm(16, 64, eps=1e-05, affine=True)
+          (2): LeakyReLU(negative_slope=0.2, inplace=True)
+        )
+      )
+      (c2): dcgan_conv(
+        (main): Sequential(
+          (0): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (1): GroupNorm(16, 64, eps=1e-05, affine=True)
+          (2): LeakyReLU(negative_slope=0.2, inplace=True)
+        )
+      )
+    )
+    (encoder_Er): encoder_specific(
+      (c1): dcgan_conv(
+        (main): Sequential(
+          (0): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (1): GroupNorm(16, 64, eps=1e-05, affine=True)
+          (2): LeakyReLU(negative_slope=0.2, inplace=True)
+        )
+      )
+      (c2): dcgan_conv(
+        (main): Sequential(
+          (0): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (1): GroupNorm(16, 64, eps=1e-05, affine=True)
+          (2): LeakyReLU(negative_slope=0.2, inplace=True)
+        )
+      )
+    )
+    (decoder_Dp): decoder_specific(
+      (upc1): dcgan_upconv(
+        (main): Sequential(
+          (0): ConvTranspose2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (1): GroupNorm(16, 64, eps=1e-05, affine=True)
+          (2): LeakyReLU(negative_slope=0.2, inplace=True)
+        )
+      )
+      (upc2): dcgan_upconv(
+        (main): Sequential(
+          (0): ConvTranspose2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (1): GroupNorm(16, 64, eps=1e-05, affine=True)
+          (2): LeakyReLU(negative_slope=0.2, inplace=True)
+        )
+      )
+    )
+    (decoder_Dr): decoder_specific(
+      (upc1): dcgan_upconv(
+        (main): Sequential(
+          (0): ConvTranspose2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (1): GroupNorm(16, 64, eps=1e-05, affine=True)
+          (2): LeakyReLU(negative_slope=0.2, inplace=True)
+        )
+      )
+      (upc2): dcgan_upconv(
+        (main): Sequential(
+          (0): ConvTranspose2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (1): GroupNorm(16, 64, eps=1e-05, affine=True)
+          (2): LeakyReLU(negative_slope=0.2, inplace=True)
+        )
+      )
+    )
+    (decoder_D): decoder_D(
+      (upc1): dcgan_upconv(
+        (main): Sequential(
+          (0): ConvTranspose2d(64, 32, kernel_size=(3, 3), stride=(2, 2), padding=(1, 1), output_padding=(1, 1))
+          (1): GroupNorm(16, 32, eps=1e-05, affine=True)
+          (2): LeakyReLU(negative_slope=0.2, inplace=True)
+        )
+      )
+      (upc2): dcgan_upconv(
+        (main): Sequential(
+          (0): ConvTranspose2d(32, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (1): GroupNorm(16, 32, eps=1e-05, affine=True)
+          (2): LeakyReLU(negative_slope=0.2, inplace=True)
+        )
+      )
+      (upc3): ConvTranspose2d(32, 1, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+    )
+    (phycell): PhyCell(
+      (cell_list): ModuleList(
+        (0): PhyCell_Cell(
+          (F): Sequential(
+            (conv1): Conv2d(64, 49, kernel_size=(7, 7), stride=(1, 1), padding=(3, 3))
+            (bn1): GroupNorm(7, 49, eps=1e-05, affine=True)
+            (conv2): Conv2d(49, 64, kernel_size=(1, 1), stride=(1, 1))
+          )
+          (convgate): Conv2d(128, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        )
+      )
+    )
+    (convcell): PhyD_ConvLSTM(
+      (cell_list): ModuleList(
+        (0): PhyD_ConvLSTM_Cell(
+          (conv): Conv2d(192, 512, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        )
+        (1): PhyD_ConvLSTM_Cell(
+          (conv): Conv2d(256, 512, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        )
+        (2): PhyD_ConvLSTM_Cell(
+          (conv): Conv2d(192, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        )
+      )
+    )
+  )
+  (k2m): K2M()
+  (criterion): MSELoss()
+)
+| module                                 | #parameters or shape   | #flops     |
+|:---------------------------------------|:-----------------------|:-----------|
+| model                                  | 3.092M                 | 36.759G    |
+|  phycell.cell_list.0                   |  0.231M                |  2.718G    |
+|   phycell.cell_list.0.F                |   0.157M               |   1.849G   |
+|    phycell.cell_list.0.F.conv1         |    0.154M              |    1.81G   |
+|    phycell.cell_list.0.F.bn1           |    98                  |    2.885M  |
+|    phycell.cell_list.0.F.conv2         |    3.2K                |    36.93M  |
+|   phycell.cell_list.0.convgate         |   73.792K              |   0.868G   |
+|    phycell.cell_list.0.convgate.weight |    (64, 128, 3, 3)     |            |
+|    phycell.cell_list.0.convgate.bias   |    (64,)               |            |
+|  convcell.cell_list                    |  2.508M                |  29.52G    |
+|   convcell.cell_list.0.conv            |   0.885M               |   10.419G  |
+|    convcell.cell_list.0.conv.weight    |    (512, 192, 3, 3)    |            |
+|    convcell.cell_list.0.conv.bias      |    (512,)              |            |
+|   convcell.cell_list.1.conv            |   1.18M                |   13.892G  |
+|    convcell.cell_list.1.conv.weight    |    (512, 256, 3, 3)    |            |
+|    convcell.cell_list.1.conv.bias      |    (512,)              |            |
+|   convcell.cell_list.2.conv            |   0.443M               |   5.209G   |
+|    convcell.cell_list.2.conv.weight    |    (256, 192, 3, 3)    |            |
+|    convcell.cell_list.2.conv.bias      |    (256,)              |            |
+|  encoder                               |  0.353M                |  4.519G    |
+|   encoder.encoder_E                    |   28.32K               |   0.337G   |
+|    encoder.encoder_E.c1.main           |    0.384K              |    5.276M  |
+|    encoder.encoder_E.c2.main           |    9.312K              |    0.11G   |
+|    encoder.encoder_E.c3.main           |    18.624K             |    0.221G  |
+|   encoder.encoder_Ep                   |   74.112K              |   0.876G   |
+|    encoder.encoder_Ep.c1.main          |    37.056K             |    0.438G  |
+|    encoder.encoder_Ep.c2.main          |    37.056K             |    0.438G  |
+|   encoder.encoder_Er                   |   74.112K              |   0.876G   |
+|    encoder.encoder_Er.c1.main          |    37.056K             |    0.438G  |
+|    encoder.encoder_Er.c2.main          |    37.056K             |    0.438G  |
+|   encoder.decoder_Dp                   |   74.112K              |   0.876G   |
+|    encoder.decoder_Dp.upc1.main        |    37.056K             |    0.438G  |
+|    encoder.decoder_Dp.upc2.main        |    37.056K             |    0.438G  |
+|   encoder.decoder_Dr                   |   74.112K              |   0.876G   |
+|    encoder.decoder_Dr.upc1.main        |    37.056K             |    0.438G  |
+|    encoder.decoder_Dr.upc2.main        |    37.056K             |    0.438G  |
+|   encoder.decoder_D                    |   28.129K              |   0.68G    |
+|    encoder.decoder_D.upc1.main         |    18.528K             |    0.225G  |
+|    encoder.decoder_D.upc2.main         |    9.312K              |    0.442G  |
+|    encoder.decoder_D.upc3              |    0.289K              |    13.566M |
+|  k2m                                   |                        |  2.151M    |
+--------------------------------------------------------------------------------
+1725672050449 lion error 
+  | Name      | Type          | Params | Mode 
+----------------------------------------------------
+0 | model     | PhyDNet_Model | 3.1 M  | train
+1 | criterion | MSELoss       | 0      | train
+----------------------------------------------------
+3.1 M     Trainable params
+0         Non-trainable params
+3.1 M     Total params
+12.367    Total estimated model params size (MB)
+93        Modules in train mode
+0         Modules in eval mode
