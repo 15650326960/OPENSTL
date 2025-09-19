@@ -3,7 +3,7 @@ import torch
 from torch.nn.modules import GroupNorm
 from torch.nn.modules.batchnorm import _BatchNorm
 
-from openstl.models.utils.layers import SELayer
+from ope.models.utils.layers import SELayer
 
 
 def is_norm(modules):

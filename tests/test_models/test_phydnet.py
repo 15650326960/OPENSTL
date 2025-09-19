@@ -1,6 +1,6 @@
 import pytest
 
-from openstl.models import PhyDNet_Model
+from ope.models import PhyDNet_Model
 
 
 def test_assertion():

@@ -6,6 +6,7 @@ import torch.nn as nn
 from timm.models.layers import DropPath, trunc_normal_
 
 
+
 class GroupNorm(nn.GroupNorm):
     """
     Group Normalization with 1 group.

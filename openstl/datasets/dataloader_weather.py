@@ -83,13 +83,13 @@ class WeatherBenchDataset(Dataset):
         idx_in (list): The list of input indices.
         idx_out (list): The list of output indices to predict.
         step (int): Sampling step in the time dimension.
-        level (int|list|"all"): Level(s) to use.
+        levels (int|list|"all"): Level(s) to use.
         data_split (str): The resolution (degree) of Wheather Bench splits.
         use_augment (bool): Whether to use augmentations (defaults to False).
     """
 
     def __init__(self, data_root, data_name, training_time,
-                 idx_in, idx_out, step=1, levels=['50'], data_split='5_625',
+                 idx_in, idx_out, step=1, levels=['50'], data_split='1_40625',
                  mean=None, std=None,
                  transform_data=None, transform_labels=None, use_augment=False):
         super().__init__()
@@ -105,7 +105,6 @@ class WeatherBenchDataset(Dataset):
         self.transform_data = transform_data
         self.transform_labels = transform_labels
         self.use_augment = use_augment
-        self.data_name = data_name
 
         self.time = None
         self.time_size = self.training_time
@@ -167,7 +166,7 @@ class WeatherBenchDataset(Dataset):
 
         if data_name in data_keys_map:
             data = dataset.get(data_keys_map[data_name]).values
-        else:
+        else:#
             data = dataset.get(data_name).values
 
         mean = data.mean().reshape(1, 1, 1, 1)
@@ -211,8 +210,8 @@ def load_data(batch_size,
               val_batch_size,
               data_root,
               num_workers=4,
-              data_split='5_625',
-              data_name='t2m',
+              data_split='1_40625',
+              data_name='tp',
               train_time=['1979', '2015'],
               val_time=['2016', '2016'],
               test_time=['2017', '2018'],
@@ -243,7 +242,7 @@ def load_data(batch_size,
                                     mean=train_set.mean,
                                     std=train_set.std)
     test_set = WeatherBenchDataset(weather_dataroot,
-                                    data_name, data_split=data_split,
+                                    data_name=data_name, data_split=data_split,
                                     training_time=test_time,
                                     idx_in=idx_in,
                                     idx_out=idx_out,
@@ -257,7 +256,7 @@ def load_data(batch_size,
                                      pin_memory=True, drop_last=True,
                                      num_workers=num_workers,
                                      distributed=distributed, use_prefetcher=use_prefetcher)
-    dataloader_vali = create_loader(test_set, # validation_set,
+    dataloader_vali = create_loader(vali_set, # validation_set,
                                     batch_size=val_batch_size,
                                     shuffle=False, is_training=False,
                                     pin_memory=True, drop_last=drop_last,
@@ -275,25 +274,25 @@ def load_data(batch_size,
 
 if __name__ == '__main__':
     from openstl.core import metric
-    data_split=['5_625', '1_40625']
-    data_name = 't2m'
+    data_split=['1_40625']#, '1_40625'
+    data_name = 'tp'
     # data_split=['5_625',]
     # data_name = 'mv'
 
     for _split in data_split:
-        step, level = 24, [150, 500, 850]
+        step, levels = 24, [150, 500, 850]
         dataloader_train, _, dataloader_test = \
             load_data(batch_size=128,
                     val_batch_size=32,
                     data_root='../../data',
                     num_workers=4, data_name=data_name,
                     data_split=_split,
-                    train_time=['1979', '2015'],
+                    train_time=['2010', '2015'],
                     val_time=['2016', '2016'],
                     test_time=['2017', '2018'],
                     idx_in=[-11, -10, -9, -8, -7, -6, -5, -4, -3, -2, -1, 0],
                     idx_out=[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
-                    step=step, level=level, use_augment=True)
+                    step=step, levels=levels, use_augment=True)
 
         print(len(dataloader_train), len(dataloader_test))
         for item in dataloader_train:

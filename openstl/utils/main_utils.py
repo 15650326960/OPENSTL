@@ -82,7 +82,7 @@ def check_dir(path):
 def get_dataset(dataname, config):
     from openstl.datasets import dataset_parameters
     from openstl.datasets import load_data
-    config.update(dataset_parameters[dataname])
+    config.update(dataset_parameters[dataname]) #将dataset_parameters中的参数更新到config中
     return load_data(**config)
 
 
@@ -138,11 +138,15 @@ def load_config(filename:str = None):
     return config
 
 
-def update_config(args, config, exclude_keys=list()):
-    """update the args dict with a new config"""
-    assert isinstance(args, dict) and isinstance(config, dict)
-    for k in config.keys():
-        if args.get(k, False):
+def update_config(args, config, exclude_keys=list()): 
+    #若args中的参数与config中的参数不同, 则以args中的参数为主
+
+    assert isinstance(args, dict) and isinstance(config, dict) #检测是否是字典
+
+    for k in config.keys(): #遍历config中的key
+
+        if args.get(k, False):  #如果args中存在这个key
+
             if args[k] != config[k] and k not in exclude_keys and args[k] is not None:
                 print(f'overwrite config key -- {k}: {config[k]} -> {args[k]}')
             else:

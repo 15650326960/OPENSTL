@@ -1,10 +1,17 @@
 import argparse
 import os
 import numpy as np
+import matplotlib.colors as mcolors
+import matplotlib.pyplot as plt
 
 from openstl.datasets import dataset_parameters
 from openstl.utils import (show_video_gif_multiple, show_video_gif_single, show_video_line,
                            show_taxibj, show_weather_bench)
+
+# 在文件开头创建自定义 colormap
+final_colors = ['#F0F8FF', '#F0FFFF', '#E0FFFF', '#B0E0E6', '#5F9EA0', '#4682B4', '#4169E1']
+custom_final_cmap = mcolors.LinearSegmentedColormap.from_list('custom_final', final_colors)
+plt.register_cmap(name='custom_final', cmap=custom_final_cmap)
 
 
 def min_max_norm(data):
@@ -19,7 +26,7 @@ def parse_args():
 
     parser.add_argument('--dataname', '-d', default=None, type=str,
                         help='The name of dataset (default: "mmnist")')
-    parser.add_argument('--index', '-i', default=0, type=int, help='The index of a video sequence to show')
+    parser.add_argument('--index', '-i', default=1, type=int, help='The index of a video sequence to show')
     parser.add_argument('--work_dirs', '-w', default=None, type=str,
                         help='Path to the work_dir or the path to a set of work_dirs')
     parser.add_argument('--vis_dirs', '-v', action='store_true', default=False,
@@ -69,7 +76,7 @@ def main():
         try:
             predicts_dict[method] = np.load(os.path.join(base_dir, method, 'saved/preds.npy'))
             if 'weather' in args.dataname:
-                predicts_dict[method] = min_max_norm(predicts_dict[method])
+                predicts_dict[method] = np.clip(predicts_dict[method], 0, 1)
         except:
             empty_keys.append(method)
             print('Failed to read the results of', method)
@@ -77,59 +84,64 @@ def main():
     for k in empty_keys:
         method_list.pop(method_list.index(k))
 
-    for method in method_list:
-        inputs = np.load(os.path.join(base_dir, method_list[0], 'saved/inputs.npy'))
-        trues = np.load(os.path.join(base_dir, method_list[0], 'saved/trues.npy'))
-        if 'weather' in args.dataname:
-            inputs = min_max_norm(inputs)
-            trues = min_max_norm(trues)
-            inputs = show_weather_bench(inputs[idx, 0:ncols, ...], src_img=None, cmap='GnBu').transpose(0, 3, 1, 2)
-            trues = show_weather_bench(trues[idx, 0:ncols, ...], src_img=None, cmap='GnBu').transpose(0, 3, 1, 2)
-        elif 'taxibj' in args.dataname:
-            inputs = show_taxibj(inputs[idx, 0:ncols, ...], cmap='viridis').transpose(0, 3, 1, 2)
-            trues = show_taxibj(trues[idx, 0:ncols, ...], cmap='viridis').transpose(0, 3, 1, 2)
-        else:
-            inputs, trues = inputs[idx], trues[idx]
-        if not args.reload_input:  # load the input and true for each method
-            break
-        else:
-            inputs_dict[method], trues_dict[method] = inputs, trues
+    inputs = np.load(os.path.join(base_dir, method_list[0], 'saved/inputs.npy'))
+    trues = np.load(os.path.join(base_dir, method_list[0], 'saved/trues.npy'))
+    for idx in range(0, 17408, 100):
+        for method in method_list:
+            inputs = np.load(os.path.join(base_dir, method_list[0], 'saved/inputs.npy'))
+            trues = np.load(os.path.join(base_dir, method_list[0], 'saved/trues.npy'))
+            if 'weather' in args.dataname:
+                inputs = np.clip(inputs, 0, 1)
+                trues = np.clip(trues, 0, 1)
+                inputs = show_weather_bench(inputs[idx, 0:ncols, ...], src_img=None, cmap='custom_final')
+                inputs = inputs.transpose(0, 3, 1, 2)
+                trues = show_weather_bench(trues[idx, 0:ncols, ...], src_img=None, cmap='custom_final')
+                trues = trues.transpose(0, 3, 1, 2)
+            elif 'taxibj' in args.dataname:
+                inputs = show_taxibj(inputs[idx, 0:ncols, ...], cmap='viridis').transpose(0, 3, 1, 2)
+                trues = show_taxibj(trues[idx, 0:ncols, ...], cmap='viridis').transpose(0, 3, 1, 2)
+            else:
+                inputs, trues = inputs[idx], trues[idx]
+            if not args.reload_input:  # load the input and true for each method
+                break
+            else:
+                inputs_dict[method], trues_dict[method] = inputs, trues
 
-    # plot gifs and figures of the STL methods
-    for i, method in enumerate(method_list):
-        print(method, predicts_dict[method][idx].shape)
-        if args.reload_input:
-            inputs, trues = inputs_dict[method], trues_dict[method]
-        if 'weather' in args.dataname:
-            preds = show_weather_bench(predicts_dict[method][idx, 0:ncols, ...],
-                                       src_img=None, cmap='GnBu', vis_channel=args.vis_channel)
-            preds = preds.transpose(0, 3, 1, 2)
-        elif 'taxibj' in args.dataname:
-            preds = show_taxibj(predicts_dict[method][idx, 0:ncols, ...],
-                                cmap='viridis', vis_channel=args.vis_channel)
-            preds = preds.transpose(0, 3, 1, 2)
-        else:
-            preds = predicts_dict[method][idx]
+        # plot gifs and figures of the STL methods
+        for i, method in enumerate(method_list):
+            print(method, predicts_dict[method][idx].shape)
+            if args.reload_input:
+                inputs, trues = inputs_dict[method], trues_dict[method]
+            if 'weather' in args.dataname:
+                preds = show_weather_bench(predicts_dict[method][idx, 0:ncols, ...],
+                                        src_img=None, cmap='custom_final')
+                preds = preds.transpose(0, 3, 1, 2)
+            elif 'taxibj' in args.dataname:
+                preds = show_taxibj(predicts_dict[method][idx, 0:ncols, ...],
+                                    cmap='viridis', vis_channel=args.vis_channel)
+                preds = preds.transpose(0, 3, 1, 2)
+            else:
+                preds = predicts_dict[method][idx]
 
-        if i == 0:
-            show_video_line(inputs.copy(), ncols=config['pre_seq_length'], vmax=0.6, cbar=False,
-                out_path='{}/{}_input{}'.format(args.save_dirs, args.dataname+c_surfix, str(idx)+'.png'),
-                format='png', use_rgb=use_rgb)
-            show_video_line(trues.copy(), ncols=config['aft_seq_length'], vmax=0.6, cbar=False,
-                out_path='{}/{}_true{}'.format(args.save_dirs, args.dataname+c_surfix, str(idx)+'.png'),
-                format='png', use_rgb=use_rgb)
-            show_video_gif_single(inputs.copy(), use_rgb=use_rgb,
-                out_path='{}/{}_{}_{}_input'.format(args.save_dirs, args.dataname+c_surfix, method, idx))
-            show_video_gif_single(trues.copy(), use_rgb=use_rgb,
-                out_path='{}/{}_{}_{}_true'.format(args.save_dirs, args.dataname+c_surfix, method, idx))
-
-        show_video_line(preds, ncols=ncols, vmax=0.6, cbar=False,
-                        out_path='{}/{}_{}_{}'.format(args.save_dirs, args.dataname+c_surfix, method, str(idx)+'.png'),
-                        format='png', use_rgb=use_rgb)
-        show_video_gif_multiple(inputs, trues, preds, use_rgb=use_rgb,
-                                out_path='{}/{}_{}_{}'.format(args.save_dirs, args.dataname+c_surfix, method, idx))
-        show_video_gif_single(preds, use_rgb=use_rgb,
-                              out_path='{}/{}_{}_{}_pred'.format(args.save_dirs, args.dataname+c_surfix, method, idx))
+            if i == 0:
+                show_video_line(inputs.copy(), ncols=config['pre_seq_length'], vmax=0.6, cbar=False,
+                    out_path='{}/{}_input{}'.format(args.save_dirs, args.dataname+c_surfix, str(idx)+'.png'),
+                    format='png', use_rgb=use_rgb)
+                show_video_line(trues.copy(), ncols=config['aft_seq_length'], vmax=0.6, cbar=False,
+                    out_path='{}/{}_true{}'.format(args.save_dirs, args.dataname+c_surfix, str(idx)+'.png'),
+                    format='png', use_rgb=use_rgb)
+                show_video_gif_single(inputs.copy(), use_rgb=use_rgb,
+                    out_path='{}/{}_{}_{}_input'.format(args.save_dirs, args.dataname+c_surfix, method, idx))
+                show_video_gif_single(trues.copy(), use_rgb=use_rgb,
+                    out_path='{}/{}_{}_{}_true'.format(args.save_dirs, args.dataname+c_surfix, method, idx))
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    
+            show_video_line(preds, ncols=ncols, vmax=0.6, cbar=False,
+                            out_path='{}/{}_{}_{}'.format(args.save_dirs, args.dataname+c_surfix, method, str(idx)+'.png'),
+                            format='png', use_rgb=use_rgb)
+            show_video_gif_multiple(inputs, trues, preds, use_rgb=use_rgb,
+                                    out_path='{}/{}_{}_{}'.format(args.save_dirs, args.dataname+c_surfix, method, idx))
+            show_video_gif_single(preds, use_rgb=use_rgb,
+                                out_path='{}/{}_{}_{}_pred'.format(args.save_dirs, args.dataname+c_surfix, method, idx))
 
 
 if __name__ == '__main__':

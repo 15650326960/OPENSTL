@@ -26,7 +26,5 @@ __all__ = [
     'SwinSubBlock', 'UniformerSubBlock', 'VANSubBlock', 'ViTSubBlock', 'TAUSubBlock',
     'ResBlock', 'RRDB', 'ResidualDenseBlock_4C', 'Up', 'Conv3D', 'ConvLayer',
     'MatrixPredictor3DConv', 'SimpleMatrixPredictor3DConv_direct', 'PredictModel',
-    'UpSample', 'DownSample', 'STconvert' 
-    
-    
+    'UpSample', 'DownSample', 'STconvert'  
 ]

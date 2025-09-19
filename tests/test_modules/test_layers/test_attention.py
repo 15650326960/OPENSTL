@@ -4,7 +4,7 @@ import torch
 from unittest import TestCase
 from unittest.mock import ANY, MagicMock
 
-from openstl.models.utils.layers.attention import ShiftWindowMSA, WindowMSA
+from ope.models.utils.layers.attention import ShiftWindowMSA, WindowMSA
 
 
 def get_relative_position_index(window_size):

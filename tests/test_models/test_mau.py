@@ -1,6 +1,6 @@
 import pytest
 
-from openstl.models import MAU_Model
+from ope.models import MAU_Model
 
 
 def test_assertion():

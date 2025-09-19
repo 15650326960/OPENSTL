@@ -10,7 +10,7 @@ class ConvLSTMCell(nn.Module):
         self.num_hidden = num_hidden
         self.padding = filter_size // 2
         self._forget_bias = 1.0
-        if layer_norm:
+        if layer_norm:  #若为层归一化
             self.conv_x = nn.Sequential(
                 nn.Conv2d(in_channel, num_hidden * 4, kernel_size=filter_size,
                           stride=stride, padding=self.padding, bias=False),

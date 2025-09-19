@@ -31,8 +31,8 @@ class SwinLSTM_D(Base_method):
         return pred_y      
     
     def training_step(self, batch, batch_idx):
-        batch_x, batch_y = batch # both are [8, 10, 1, 64, 64] for mmnist
-        ims = torch.cat([batch_x, batch_y], dim=1).permute(0, 1, 3, 4, 2).contiguous() # [8, 20, 64, 64, 1] for mmnist
+        batch_x, batch_y = batch
+        ims = torch.cat([batch_x, batch_y], dim=1).permute(0, 1, 3, 4, 2).contiguous()
 
         img_gen, loss = self.model(ims)
         self.log('train_loss', loss, on_step=True, on_epoch=True, prog_bar=True)

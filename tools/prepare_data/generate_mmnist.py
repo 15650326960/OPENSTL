@@ -3,7 +3,7 @@ import cv2
 import random
 import numpy as np
 
-from openstl.datasets.dataloader_moving_mnist import MovingMNIST
+from ope.datasets.dataloader_moving_mnist import MovingMNIST
 
 
 def parse_args():

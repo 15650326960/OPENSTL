@@ -10,31 +10,34 @@ import torch
 from openstl.methods import method_maps
 from openstl.datasets import BaseDataModule
 from openstl.utils import (get_dataset, measure_throughput, SetupCallback, EpochEndCallback, BestCheckpointCallback)
+from openstl.core import calculate_model_size
 
 from lightning import seed_everything, Trainer
 import lightning.pytorch.callbacks as lc
 
 
 class BaseExperiment(object):
-    """The basic class of PyTorch training and evaluation."""
+    """用于管理模型训练、测试和实验的基本设置"""
 
     def __init__(self, args, dataloaders=None, strategy='auto'):
         """Initialize experiments (non-dist as an example)"""
         self.args = args
         self.config = self.args.__dict__
         self.method = None
-        self.args.method = self.args.method.lower()
-        self._dist = self.args.dist
+        self.args.method = self.args.method.lower() #将方法名小写
+        self._dist = self.args.dist #是否使用分布式训练
 
-        base_dir = args.res_dir if args.res_dir is not None else 'work_dirs'
+        base_dir = args.res_dir if args.res_dir is not None else 'work_dirs'    #项目保存目录
         save_dir = osp.join(base_dir, args.ex_name if not args.ex_name.startswith(args.res_dir) \
-            else args.ex_name.split(args.res_dir+'/')[-1])
-        ckpt_dir = osp.join(save_dir, 'checkpoints')
+            else args.ex_name.split(args.res_dir+'/')[-1])  #实验保存路径
+        ckpt_dir = osp.join(save_dir, 'checkpoints') # 检查点保存路径
 
-        seed_everything(args.seed)
-        self.data = self._get_data(dataloaders)
+        seed_everything(args.seed)  #设置随机种子
+        self.data = self._get_data(dataloaders) #获取数据集
         self.method = method_maps[self.args.method](steps_per_epoch=len(self.data.train_loader), \
-            test_mean=self.data.test_mean, test_std=self.data.test_std, save_dir=save_dir, **self.config)
+            test_mean=self.data.test_mean, test_std=self.data.test_std, save_dir=save_dir, **self.config)   #将模型实例化，动态调用self.config中的参数
+        calculate_model_size(self.method) #计算模型大小
+        
         callbacks, self.save_dir = self._load_callbacks(args, save_dir, ckpt_dir)
         self.trainer = self._init_trainer(self.args, callbacks, strategy)
 
@@ -80,10 +83,10 @@ class BaseExperiment(object):
         return callbacks, save_dir
 
     def _get_data(self, dataloaders=None):
-        """Prepare datasets and dataloaders"""
+        """准备数据集和数据加载器"""
         if dataloaders is None:
             train_loader, vali_loader, test_loader = \
-                get_dataset(self.args.dataname, self.config)
+                get_dataset(self.args.dataname, self.config)#self.args.dataname=weather_tp
         else:
             train_loader, vali_loader, test_loader = dataloaders
 

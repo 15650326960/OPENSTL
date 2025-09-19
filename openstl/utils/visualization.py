@@ -142,10 +142,10 @@ def show_video_gif_multiple(prev, true, pred, vmax=0.6, vmin=0.0, cmap='gray', n
                         im = ax.imshow(pred[i-frames], cmap=cmap, norm=norm)
             ax.axis('off')
             im.set_clim(vmin, vmax)
-        plt.savefig('./tmp.png', bbox_inches='tight', format='png')
-        images.append(imageio.imread('./tmp.png'))
+        plt.savefig('./xxx.png', bbox_inches='tight', format='png')
+        images.append(imageio.imread('./xxx.png'))
     plt.close()
-    os.remove('./tmp.png')
+    os.remove('./xxx.png')
 
     if out_path is not None:
         if not out_path.endswith('gif'):
@@ -254,9 +254,9 @@ def show_weather_bench(heatmap, src_img=None, cmap='GnBu', title=None,
     """fusing src_img and heatmap to show or save of Weather Bench"""
     if not isinstance(src_img, np.ndarray):
         if src_img is None:
-            plot_world_map('tmp.png')
-            src_img = cv2.imread('tmp.png')
-            os.remove('./tmp.png')
+            plot_world_map('xxx.png')
+            src_img = cv2.imread('xxx.png')
+            os.remove('./xxx.png')
         elif isinstance(src_img, str):
             src_img = cv2.imread(src_img)
         src_img = cv2.resize(src_img, (512, 256))

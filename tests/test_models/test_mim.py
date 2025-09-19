@@ -1,6 +1,6 @@
 import pytest
 
-from openstl.models import MIM_Model
+from ope.models import MIM_Model
 
 
 def test_assertion():

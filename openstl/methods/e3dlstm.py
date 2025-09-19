@@ -14,6 +14,6 @@ class E3DLSTM(PredRNN):
         PredRNN.__init__(self, **args)
 
     def _build_model(self, **args):
-        num_hidden = [int(x) for x in '128,128,128,128'.split(',')]
+        num_hidden = [int(x) for x in self.args.num_hidden.split(',')]
         num_layers = len(num_hidden)
         return E3DLSTM_Model(num_layers, num_hidden, self.hparams)

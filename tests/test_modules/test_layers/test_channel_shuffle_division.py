@@ -1,7 +1,7 @@
 import pytest
 import torch
 
-from openstl.models.utils.layers import channel_shuffle, make_divisible
+from ope.models.utils.layers import channel_shuffle, make_divisible
 
 
 def test_make_divisible():

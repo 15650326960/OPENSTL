@@ -13,7 +13,7 @@ class SwinLSTM_D_Model(nn.Module):
     def __init__(self, depths_downsample, depths_upsample, num_heads, configs, **kwargs):
         super(SwinLSTM_D_Model, self).__init__()
         T, C, H, W = configs.in_shape
-        assert H == W, 'Only support H  = W for image input'
+        assert H == W, 'Only support H = W for image input'
         self.configs = configs
         self.depths_downsample = depths_downsample
         self.depths_upsample = depths_upsample
@@ -41,7 +41,7 @@ class SwinLSTM_D_Model(nn.Module):
         for i in range(T - 1):
             states_down, x = self.Downsample(input_frames[:, i], states_down) 
             states_up, output = self.Upsample(x, states_up)
-            next_frames.append(output) # till end, 9 frames
+            next_frames.append(output)
         for i in range(total_T - T):
             states_down, x = self.Downsample(last_frame, states_down) 
             states_up, output = self.Upsample(x, states_up)
@@ -50,7 +50,7 @@ class SwinLSTM_D_Model(nn.Module):
  
 
         # [length, batch, channel, height, width] -> [batch, length, height, width, channel]
-        next_frames = torch.stack(next_frames, dim=0).permute(1, 0, 3, 4, 2).contiguous() # 19 frames
+        next_frames = torch.stack(next_frames, dim=0).permute(1, 0, 3, 4, 2).contiguous()
         if kwargs.get('return_loss', True):
             loss = self.MSE_criterion(next_frames, frames_tensor[:, 1:])
         else:

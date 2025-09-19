@@ -8,7 +8,7 @@ import mmcv
 import numpy as np
 import pytest
 
-from openstl.models.utils.visualization import color_val_matplotlib, imshow_infos, ImshowInfosContextManager
+from ope.models.utils.visualization import color_val_matplotlib, imshow_infos, ImshowInfosContextManager
 
 def test_color():
     assert color_val_matplotlib(mmcv.Color.blue) == (0., 0., 1.)

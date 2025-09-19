@@ -4,7 +4,7 @@ import platform
 import multiprocessing as mp
 
 from mmcv import Config
-from openstl.utils import setup_multi_processes
+from ope.utils import setup_multi_processes
 
 
 def test_setup_multi_processes():

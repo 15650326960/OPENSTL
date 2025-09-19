@@ -228,6 +228,20 @@ dataset_parameters = {
         'data_name': 'vil', 
         'metrics': ['mse', 'mae', 'pod', 'sucr', 'csi', 'lpips'],
     },
-    
-        
+    'fusion': {
+        'in_shape': [12, 1, 500, 900],
+        'pre_seq_length': 12,
+        'aft_seq_length': 12,
+        'total_length': 24,
+        'data_name': 'fusion',
+        'metrics': ['mse', 'mae', 'ssim', 'psnr', 'csi', 'pod', 'far'],
+    },
+    'fusion_small': {
+        'in_shape': [12, 1, 250, 450],  # 下采样2倍
+        'pre_seq_length': 12,
+        'aft_seq_length': 12,
+        'total_length': 24,
+        'data_name': 'fusion_small',
+        'metrics': ['mse', 'mae', 'ssim', 'psnr', 'csi', 'pod', 'far'],
+    },
 }

@@ -8,7 +8,7 @@ from timm.models.mlp_mixer import MixerBlock
 from timm.models.swin_transformer import SwinTransformerBlock, window_partition, window_reverse
 from timm.models.vision_transformer import Block as ViTBlock
 
-from .layers import (HorBlock, ChannelAggregationFFN, MultiOrderGatedAggregation,
+from openstl.modules.layers import (HorBlock, ChannelAggregationFFN, MultiOrderGatedAggregation,
                      PoolFormerBlock, CBlock, SABlock, MixMlp, VANBlock)
 
 
@@ -226,12 +226,12 @@ class GASubBlock(nn.Module):
 
 
 class ConvMixerSubBlock(nn.Module):
-    """A block of ConvMixer."""
+    """ConvMixer块"""
 
     def __init__(self, dim, kernel_size=9, activation=nn.GELU):
         super().__init__()
         # spatial mixing
-        self.conv_dw = nn.Conv2d(dim, dim, kernel_size, groups=dim, padding="same")
+        self.conv_dw = nn.Conv2d(dim, dim, kernel_size, groups=dim, padding="same") 
         self.act_1 = activation()
         self.norm_1 = nn.BatchNorm2d(dim)
         # channel mixing
@@ -256,7 +256,7 @@ class ConvMixerSubBlock(nn.Module):
     def no_weight_decay(self):
         return dict()
 
-    def forward(self, x):
+    def forward(self, x):   #(1, 640, 16, 16)
         x = x + self.norm_1(self.act_1(self.conv_dw(x)))
         x = self.norm_2(self.act_2(self.conv_pw(x)))
         return x

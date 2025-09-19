@@ -1,0 +1,123 @@
+Model info:
+PredRNNpp_Model(
+  (MSE_criterion): MSELoss()
+  (gradient_highway): GHU(
+    (z_concat): Sequential(
+      (0): Conv2d(128, 256, kernel_size=(5, 5), stride=(1, 1), padding=(2, 2), bias=False)
+    )
+    (x_concat): Sequential(
+      (0): Conv2d(128, 256, kernel_size=(5, 5), stride=(1, 1), padding=(2, 2), bias=False)
+    )
+  )
+  (cell_list): ModuleList(
+    (0): CausalLSTMCell(
+      (conv_x): Sequential(
+        (0): Conv2d(4, 896, kernel_size=(5, 5), stride=(1, 1), padding=(2, 2), bias=False)
+      )
+      (conv_h): Sequential(
+        (0): Conv2d(128, 512, kernel_size=(5, 5), stride=(1, 1), padding=(2, 2), bias=False)
+      )
+      (conv_c): Sequential(
+        (0): Conv2d(128, 384, kernel_size=(5, 5), stride=(1, 1), padding=(2, 2), bias=False)
+      )
+      (conv_m): Sequential(
+        (0): Conv2d(128, 384, kernel_size=(5, 5), stride=(1, 1), padding=(2, 2), bias=False)
+      )
+      (conv_o): Sequential(
+        (0): Conv2d(256, 128, kernel_size=(5, 5), stride=(1, 1), padding=(2, 2), bias=False)
+      )
+      (conv_c2m): Sequential(
+        (0): Conv2d(128, 512, kernel_size=(5, 5), stride=(1, 1), padding=(2, 2), bias=False)
+      )
+      (conv_om): Sequential(
+        (0): Conv2d(128, 128, kernel_size=(5, 5), stride=(1, 1), padding=(2, 2), bias=False)
+      )
+      (conv_last): Conv2d(256, 128, kernel_size=(1, 1), stride=(1, 1), bias=False)
+    )
+    (1-3): 3 x CausalLSTMCell(
+      (conv_x): Sequential(
+        (0): Conv2d(128, 896, kernel_size=(5, 5), stride=(1, 1), padding=(2, 2), bias=False)
+      )
+      (conv_h): Sequential(
+        (0): Conv2d(128, 512, kernel_size=(5, 5), stride=(1, 1), padding=(2, 2), bias=False)
+      )
+      (conv_c): Sequential(
+        (0): Conv2d(128, 384, kernel_size=(5, 5), stride=(1, 1), padding=(2, 2), bias=False)
+      )
+      (conv_m): Sequential(
+        (0): Conv2d(128, 384, kernel_size=(5, 5), stride=(1, 1), padding=(2, 2), bias=False)
+      )
+      (conv_o): Sequential(
+        (0): Conv2d(256, 128, kernel_size=(5, 5), stride=(1, 1), padding=(2, 2), bias=False)
+      )
+      (conv_c2m): Sequential(
+        (0): Conv2d(128, 512, kernel_size=(5, 5), stride=(1, 1), padding=(2, 2), bias=False)
+      )
+      (conv_om): Sequential(
+        (0): Conv2d(128, 128, kernel_size=(5, 5), stride=(1, 1), padding=(2, 2), bias=False)
+      )
+      (conv_last): Conv2d(256, 128, kernel_size=(1, 1), stride=(1, 1), bias=False)
+    )
+  )
+  (conv_last): Conv2d(128, 4, kernel_size=(1, 1), stride=(1, 1), bias=False)
+)
+| module                                | #parameters or shape   | #flops     |
+|:--------------------------------------|:-----------------------|:-----------|
+| model                                 | 38.314M                | 0.413T     |
+|  gradient_highway                     |  1.638M                |  19.294G   |
+|   gradient_highway.z_concat.0         |   0.819M               |   9.647G   |
+|    gradient_highway.z_concat.0.weight |    (256, 128, 5, 5)    |            |
+|   gradient_highway.x_concat.0         |   0.819M               |   9.647G   |
+|    gradient_highway.x_concat.0.weight |    (256, 128, 5, 5)    |            |
+|  cell_list                            |  36.675M               |  0.393T    |
+|   cell_list.0                         |   7.086M               |   73.793G  |
+|    cell_list.0.conv_x.0               |    89.6K               |    1.055G  |
+|    cell_list.0.conv_h.0               |    1.638M              |    19.294G |
+|    cell_list.0.conv_c.0               |    1.229M              |    14.47G  |
+|    cell_list.0.conv_m.0               |    1.229M              |    14.47G  |
+|    cell_list.0.conv_o.0               |    0.819M              |            |
+|    cell_list.0.conv_c2m.0             |    1.638M              |    19.294G |
+|    cell_list.0.conv_om.0              |    0.41M               |    4.823G  |
+|    cell_list.0.conv_last              |    32.768K             |    0.386G  |
+|   cell_list.1                         |   9.863M               |   0.107T   |
+|    cell_list.1.conv_x.0               |    2.867M              |    33.764G |
+|    cell_list.1.conv_h.0               |    1.638M              |    19.294G |
+|    cell_list.1.conv_c.0               |    1.229M              |    14.47G  |
+|    cell_list.1.conv_m.0               |    1.229M              |    14.47G  |
+|    cell_list.1.conv_o.0               |    0.819M              |            |
+|    cell_list.1.conv_c2m.0             |    1.638M              |    19.294G |
+|    cell_list.1.conv_om.0              |    0.41M               |    4.823G  |
+|    cell_list.1.conv_last              |    32.768K             |    0.386G  |
+|   cell_list.2                         |   9.863M               |   0.107T   |
+|    cell_list.2.conv_x.0               |    2.867M              |    33.764G |
+|    cell_list.2.conv_h.0               |    1.638M              |    19.294G |
+|    cell_list.2.conv_c.0               |    1.229M              |    14.47G  |
+|    cell_list.2.conv_m.0               |    1.229M              |    14.47G  |
+|    cell_list.2.conv_o.0               |    0.819M              |            |
+|    cell_list.2.conv_c2m.0             |    1.638M              |    19.294G |
+|    cell_list.2.conv_om.0              |    0.41M               |    4.823G  |
+|    cell_list.2.conv_last              |    32.768K             |    0.386G  |
+|   cell_list.3                         |   9.863M               |   0.107T   |
+|    cell_list.3.conv_x.0               |    2.867M              |    33.764G |
+|    cell_list.3.conv_h.0               |    1.638M              |    19.294G |
+|    cell_list.3.conv_c.0               |    1.229M              |    14.47G  |
+|    cell_list.3.conv_m.0               |    1.229M              |    14.47G  |
+|    cell_list.3.conv_o.0               |    0.819M              |            |
+|    cell_list.3.conv_c2m.0             |    1.638M              |    19.294G |
+|    cell_list.3.conv_om.0              |    0.41M               |    4.823G  |
+|    cell_list.3.conv_last              |    32.768K             |    0.386G  |
+|  conv_last                            |  0.512K                |  6.029M    |
+|   conv_last.weight                    |   (4, 128, 1, 1)       |            |
+--------------------------------------------------------------------------------
+1725779050078 panda error 
+  | Name      | Type            | Params | Mode 
+------------------------------------------------------
+0 | model     | PredRNNpp_Model | 38.3 M | train
+1 | criterion | MSELoss         | 0      | train
+------------------------------------------------------
+38.3 M    Trainable params
+0         Non-trainable params
+38.3 M    Total params
+153.256   Total estimated model params size (MB)
+74        Modules in train mode
+0         Modules in eval mode

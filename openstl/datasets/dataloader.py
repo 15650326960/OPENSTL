@@ -51,5 +51,11 @@ def load_data(dataname, batch_size, val_batch_size, num_workers, data_root, dist
         from .dataloader_sevir import load_data
         cfg_dataloader['data_name'] = kwargs.get('data_name', 'sevir')
         return load_data(batch_size, val_batch_size, data_root, num_workers, **cfg_dataloader)
+    elif dataname in ['fusion', 'fusion_small']:
+        from .dataloader_precipitation import load_data
+        cfg_dataloader['csv_path'] = kwargs.get('csv_path', '/home/jianhao/methods/OPENSTL/train_test/csv3')
+        if dataname == 'fusion_small':
+            cfg_dataloader['downsample_ratio'] = 2  # 2倍下采样
+        return load_data(batch_size, val_batch_size, data_root, num_workers, **cfg_dataloader)
     else:
         raise ValueError(f'Dataname {dataname} is unsupported')

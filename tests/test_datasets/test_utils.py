@@ -1,7 +1,7 @@
 import pytest
 import torch
 
-from openstl.models import build_loss
+from ope.models import build_loss
 
 def test_cross_entropy_loss():
     with pytest.raises(AssertionError):

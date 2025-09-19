@@ -1,6 +1,6 @@
 import pytest
 
-from openstl.models import SimVP_Model
+from ope.models import SimVP_Model
 
 
 def test_assertion():

@@ -15,16 +15,20 @@ class PhyDNet_Model(nn.Module):
 
     def __init__(self, configs, **kwargs):
         super(PhyDNet_Model, self).__init__()
-        self.pre_seq_length = configs.pre_seq_length
-        self.aft_seq_length = configs.aft_seq_length
-        _, C, H, W = configs.in_shape
-        patch_size = configs.patch_size if configs.patch_size in [2, 4] else 4
-        input_shape = (H // patch_size, W // patch_size)
+        self.pre_seq_length = configs.pre_seq_length    # 10
+        self.aft_seq_length = configs.aft_seq_length    # 10
+        _, C, H, W = configs.in_shape   #   10, 1, 64, 64
+        patch_size = configs.patch_size if configs.patch_size in [2, 4] else 4  # 4
+        input_shape = (H // patch_size, W // patch_size)    # (16, 16)
 
         self.phycell = PhyCell(input_shape=input_shape, input_dim=64, F_hidden_dims=[49],
                                n_layers=1, kernel_size=(7,7), device=configs.device)
+                                    #(16, 16) 64, [49], (7, 7)
+
         self.convcell = PhyD_ConvLSTM(input_shape=input_shape, input_dim=64, hidden_dims=[128,128,64],
                                       n_layers=3, kernel_size=(3,3), device=configs.device)
+                                    #(16, 16), 64, [128,128,64], 3, (3, 3), configs.device
+
         self.encoder = PhyD_EncoderRNN(self.phycell, self.convcell,
                                        in_channel=C, patch_size=patch_size)
         self.k2m = K2M([7,7])

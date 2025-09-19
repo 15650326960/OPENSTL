@@ -486,7 +486,7 @@ def parser_args():
     parser = argparse.ArgumentParser(description='Make nowcast training & test datasets using SEVIR')
     parser.add_argument('--sevir_data', type=str, help='location of SEVIR dataset',default='data/sevir')
     parser.add_argument('--data_name', type=str, help='different sensor type for sevir data, choice from [vis, ir069, ir107, vil]')
-    parser.add_argument('--output_dir', type=str, help='location of SEVIR dataset',default='../../data/interim')
+    parser.add_argument('--output_dir', type=str, help='location of SEVIR dataset',default='scratch/jianhao/data/interim')
     parser.add_argument('--n_chunks', type=int, help='Number of chucks to use (increase if memory limited)',default=20)
 
     args = parser.parse_args()

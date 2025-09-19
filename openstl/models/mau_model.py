@@ -108,7 +108,7 @@ class MAU_Model(nn.Module):
     def forward(self, frames_tensor, mask_true, **kwargs):
         # [batch, length, height, width, channel] -> [batch, length, channel, height, width]
         device = frames_tensor.device
-        frames = frames_tensor.permute(0, 1, 4, 2, 3).contiguous()
+        frames = frames_tensor.permute(0, 1, 4, 2, 3).contiguous()  #里面的数是位置而不是实际值
         mask_true = mask_true.permute(0, 1, 4, 2, 3).contiguous()
 
         batch_size = frames.shape[0]

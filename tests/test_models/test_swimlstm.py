@@ -1,6 +1,6 @@
 import pytest
 
-from openstl.models import SwinLSTM_D_Model
+from ope.models import SwinLSTM_D_Model
 
 
 def test_assertion():

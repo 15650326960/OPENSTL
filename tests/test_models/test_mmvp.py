@@ -1,6 +1,6 @@
 import pytest
 
-from openstl.models import MMVP_Model
+from ope.models import MMVP_Model
 
 
 def test_assertion():

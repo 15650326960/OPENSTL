@@ -17,8 +17,8 @@ patch_size = 4
 layer_norm = 0
 # training
 # lr = 1e-3
-batch_size = 1
-val_batch_size = 1
+batch_size = 16
+val_batch_size = 16
 sched = 'cosine'
 warmup_epoch = 0
 drop_last = True

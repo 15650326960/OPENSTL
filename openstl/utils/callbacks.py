@@ -4,10 +4,7 @@ import logging
 import os.path as osp
 from lightning.pytorch.callbacks import Callback, ModelCheckpoint
 from .main_utils import check_dir, collect_env, print_log, output_namespace
-from clearml import Task, Logger
 
-task =Task.init(project_name="OpenSTL", task_name="weather_tp_SimVP_Poolformer_MOE_debug")
-summary_writer = Logger.current_logger() 
 
 class SetupCallback(Callback):
     def __init__(self, prefix, setup_time, save_dir, ckpt_dir, args, method_info, argv_content=None):
@@ -49,10 +46,6 @@ class SetupCallback(Callback):
 
 
 class EpochEndCallback(Callback):
-    def __init__(self):
-        #初始化 avg_train_loss 为 None
-        self.avg_train_loss = None
-
     def on_train_epoch_end(self, trainer, pl_module, outputs=None):
         self.avg_train_loss = trainer.callback_metrics.get('train_loss')
 
@@ -60,19 +53,9 @@ class EpochEndCallback(Callback):
         lr = trainer.optimizers[0].param_groups[0]['lr']
         avg_val_loss = trainer.callback_metrics.get('val_loss')
 
-        # 检查 avg_train_loss 是否已经有值
-        if self.avg_train_loss is not None:
+        if hasattr(self, 'avg_train_loss'):
             print_log(f"Epoch {trainer.current_epoch}: Lr: {lr:.7f} | Train Loss: {self.avg_train_loss:.7f} | Vali Loss: {avg_val_loss:.7f}")
-        summary_writer.report_scalar(title='Lr', series='Lr', value=lr, iteration=trainer.current_epoch)
-        
-        # 如果 avg_train_loss 已经有值，才记录它的标量
-        if self.avg_train_loss is not None:
-            summary_writer.report_scalar(title='Train_loss', series='Train_loss', value=self.avg_train_loss.item(), iteration=trainer.current_epoch)
-        summary_writer.report_scalar(title='Vali_loss', series='Vali_loss', value=avg_val_loss.item(), iteration=trainer.current_epoch)
-        # if hasattr(self, 'avg_train_loss'):
-        #     print_log(f"Epoch {trainer.current_epoch}: Lr: {lr:.7f} | Train Loss: {self.avg_train_loss:.7f} | Vali Loss: {avg_val_loss:.7f}")
-                   
-       
+
 class BestCheckpointCallback(ModelCheckpoint):
     def on_validation_epoch_end(self, trainer, pl_module):
         super().on_validation_epoch_end(trainer, pl_module)

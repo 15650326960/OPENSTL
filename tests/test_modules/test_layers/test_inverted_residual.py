@@ -3,7 +3,7 @@ import torch
 from torch.nn.modules import GroupNorm
 from torch.nn.modules.batchnorm import _BatchNorm
 
-from openstl.models.utils.layers import InvertedResidual, SELayer
+from ope.models.utils.layers import InvertedResidual, SELayer
 
 
 def is_norm(modules):

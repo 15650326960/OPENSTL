@@ -15,9 +15,9 @@ mkdir -p data/sevir/processed
 # # convert sevir_vis
 # python tools/prepare_data/generate_sevir.py --sevir_data data/sevir --data_name vis --output_dir data/sevir/processed
 # # convert sevir_ir069
-# python tools/prepare_data/generate_sevir.py --sevir_data data/sevir --data_name ir069 --output_dir data/sevir/processed
+python generate_sevir.py --sevir_data data/sevir --data_name ir069 --output_dir data/sevir/processed
 # convert sevir_ir107
-python tools/prepare_data/generate_sevir.py --sevir_data data/sevir --data_name ir107 --output_dir data/sevir/processed
+# python tools/prepare_data/generate_sevir.py --sevir_data data/sevir --data_name ir107 --output_dir data/sevir/processed
 
 echo "finished"
 

@@ -3,8 +3,9 @@
 from .metrics import metric
 from .optim_scheduler import get_optim_scheduler, timm_schedulers
 from .optim_constant import optim_parameters
+from .Parameter import calculate_model_size
 
 
 __all__ = [
-    'metric', 'get_optim_scheduler', 'optim_parameters', 'timm_schedulers'
+    'metric', 'get_optim_scheduler', 'optim_parameters', 'timm_schedulers', 'calculate_model_size'
 ]

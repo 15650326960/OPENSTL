@@ -1,8 +1,8 @@
 import pytest
 import torch
 
-from openstl.models.backbones import VGG
-from openstl.models.utils.layers import HybridEmbed, PatchEmbed, PatchMerging
+from ope.models.backbones import VGG
+from ope.models.utils.layers import HybridEmbed, PatchEmbed, PatchMerging
 
 
 def cal_unfold_dim(dim, kernel_size, stride, padding=0, dilation=1):

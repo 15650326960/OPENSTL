@@ -10,46 +10,52 @@ __all__ = ['M2K','K2M']
 
 class PhyCell_Cell(nn.Module):
 
-    def __init__(self, input_dim, F_hidden_dim, kernel_size, bias=1):
+    def __init__(self, input_dim, F_hidden_dim, kernel_size, bias=1):   # 64, 49, (7, 7)
         super(PhyCell_Cell, self).__init__()
-        self.input_dim  = input_dim
-        self.F_hidden_dim = F_hidden_dim
-        self.kernel_size = kernel_size
-        self.padding     = kernel_size[0] // 2, kernel_size[1] // 2
-        self.bias = bias
+        self.input_dim  = input_dim                                     # 64
+        self.F_hidden_dim = F_hidden_dim                                # 49
+        self.kernel_size = kernel_size                                  # (7, 7)
+        self.padding     = kernel_size[0] // 2, kernel_size[1] // 2     # (3, 3)
+        self.bias = bias                                                # 1
         
         self.F = nn.Sequential()
         self.F.add_module('conv1', nn.Conv2d(in_channels=input_dim, out_channels=F_hidden_dim,
                                              kernel_size=self.kernel_size, stride=(1,1), padding=self.padding))
-        self.F.add_module('bn1',nn.GroupNorm(7 ,F_hidden_dim))        
+                                            # 64, 49, (7, 7), (1, 1), (3, 3)   W:( 64, 49, 7, 7)  output: (1, 49, 16, 16)
+
+        self.F.add_module('bn1',nn.GroupNorm(7 ,F_hidden_dim))        # 一共7个组，每组7个channel进行归一化
+
         self.F.add_module('conv2', nn.Conv2d(in_channels=F_hidden_dim, out_channels=input_dim,
                                              kernel_size=(1,1), stride=(1,1), padding=(0,0)))
-
+                                            #结合偏导数
+                                            # 49, 64, (1, 1), (1, 1), (0, 0)  W:( 49, 64, 1, 1)  output: (1, 64, 16, 16)
+                                            
         self.convgate = nn.Conv2d(in_channels=self.input_dim + self.input_dim,
                                   out_channels=self.input_dim,
                                   kernel_size=(3,3),
                                   padding=(1,1), bias=self.bias)
+                                # 128, 64, (3, 3), (1, 1), 1   W:( 128, 64, 3, 3)
 
-    def forward(self, x, hidden):  # x [batch_size, hidden_dim, height, width]
-        combined = torch.cat([x, hidden], dim=1)  # concatenate along channel axis
-        combined_conv = self.convgate(combined)
-        K = torch.sigmoid(combined_conv)
-        hidden_tilde = hidden + self.F(hidden)  # prediction
-        next_hidden = hidden_tilde + K * (x-hidden_tilde)  # correction , Haddamard product
+    def forward(self, x, hidden):  # x (1, 64, 16, 16) hidden (1, 64, 16, 16)
+        combined = torch.cat([x, hidden], dim=1)             # (1, 128, 16, 16)
+        combined_conv = self.convgate(combined)              # (1, 64, 16, 16)
+        K = torch.sigmoid(combined_conv)                     # (1, 64, 16, 16)
+        hidden_tilde = hidden + self.F(hidden)               # (1, 64, 16, 16)
+        next_hidden = hidden_tilde + K * (x-hidden_tilde)    # (1, 64, 16, 16)
         return next_hidden
 
 
 class PhyCell(nn.Module):
 
-    def __init__(self, input_shape, input_dim, F_hidden_dims, n_layers, kernel_size, device):
+    def __init__(self, input_shape, input_dim, F_hidden_dims, n_layers, kernel_size, device):  #(16, 16) 64, [49], 1, (7, 7)
         super(PhyCell, self).__init__()
-        self.input_shape = input_shape
-        self.input_dim = input_dim
-        self.F_hidden_dims = F_hidden_dims
-        self.n_layers = n_layers
-        self.kernel_size = kernel_size
+        self.input_shape = input_shape          # (16, 16)
+        self.input_dim = input_dim              # 64
+        self.F_hidden_dims = F_hidden_dims      # [49]
+        self.n_layers = n_layers                # 1
+        self.kernel_size = kernel_size          # (7, 7)
         self.H = []  
-        self.device = device
+        self.device = device                    #cuda
              
         cell_list = []
         for i in range(0, self.n_layers):
@@ -59,7 +65,7 @@ class PhyCell(nn.Module):
         self.cell_list = nn.ModuleList(cell_list)
         
        
-    def forward(self, input_, first_timestep=False):  # input_ [batch_size, 1, channels, width, height]
+    def forward(self, input_, first_timestep=False):  # input_ (1,64,16,16)
         batch_size = input_.data.size()[0]
         if (first_timestep):   
             self.initHidden(batch_size)  # init Hidden at each forward start
@@ -76,13 +82,13 @@ class PhyCell(nn.Module):
         for i in range(self.n_layers):
             self.H.append(torch.zeros(
                 batch_size, self.input_dim, self.input_shape[0], self.input_shape[1]).to(self.device))
-
+                # (1,64,16,16)
     def setHidden(self, H):
         self.H = H
 
 
 class PhyD_ConvLSTM_Cell(nn.Module):
-    def __init__(self, input_shape, input_dim, hidden_dim, kernel_size, bias=1):
+    def __init__(self, input_shape, input_dim, hidden_dim, kernel_size, bias=1): # (16, 16) / [64, 128, 128] / [128, 128, 64] / (3, 3) / bias=1
         """
         input_shape: (int, int)
             Height and width of input tensor as (height, width).
@@ -97,29 +103,34 @@ class PhyD_ConvLSTM_Cell(nn.Module):
         """
         super(PhyD_ConvLSTM_Cell, self).__init__()
         
-        self.height, self.width = input_shape
-        self.input_dim  = input_dim
-        self.hidden_dim = hidden_dim
-        self.kernel_size = kernel_size
-        self.padding     = kernel_size[0] // 2, kernel_size[1] // 2
-        self.bias        = bias
+        self.height, self.width = input_shape   # (16, 16)
+        self.input_dim  = input_dim             # [64, 128, 128]
+        self.hidden_dim = hidden_dim            # [128, 128, 64]
+        self.kernel_size = kernel_size          # (3, 3)
+        self.padding     = kernel_size[0] // 2, kernel_size[1] // 2 # (1, 1)
+        self.bias        = bias                 # 1
         
-        self.conv = nn.Conv2d(in_channels=self.input_dim + self.hidden_dim,
-                              out_channels=4 * self.hidden_dim,
-                              kernel_size=self.kernel_size,
-                              padding=self.padding, bias=self.bias)
-                 
+        self.conv = nn.Conv2d(in_channels=self.input_dim + self.hidden_dim, # [192, 256, 192]
+                              out_channels=4 * self.hidden_dim,             # [512, 512, 256]
+                              kernel_size=self.kernel_size,                 # (3, 3)
+                              padding=self.padding,                         # (1, 1)
+                              bias=self.bias)                               # 1
+        #输出大小为：[batch, [512, 512, 256], 16, 16]
+        
     # we implement LSTM that process only one timestep 
-    def forward(self, x, hidden): # x [batch, hidden_dim, width, height]
-        h_cur, c_cur = hidden
+    def forward(self, x, hidden): # x, h1, h2 : ( 1, [64, 128, 128], 16, 16) 
+        h_cur, c_cur = hidden     # h_cur (batch, [128, 128, 64], 16, 16) / c_cur ( 1, [128, 128, 64], 16, 16)
         
-        combined = torch.cat([x, h_cur], dim=1)  # concatenate along channel axis
-        combined_conv = self.conv(combined)
+        combined = torch.cat([x, h_cur], dim=1)  # ( 1, [192, 256, 192], 16, 16)
+        combined_conv = self.conv(combined)      # ( 1, [512, 512, 256], 16, 16)
+
         cc_i, cc_f, cc_o, cc_g = torch.split(combined_conv, self.hidden_dim, dim=1) 
-        i = torch.sigmoid(cc_i)
-        f = torch.sigmoid(cc_f)
-        o = torch.sigmoid(cc_o)
-        g = torch.tanh(cc_g)
+        # cc_i, cc_f, cc_o, cc_g  all: ( 1, [128, 128, 64], 16, 16)
+
+        i = torch.sigmoid(cc_i) # ( 1, [128, 128, 64], 16, 16)
+        f = torch.sigmoid(cc_f) # ( 1, [128, 128, 64], 16, 16)
+        o = torch.sigmoid(cc_o) # ( 1, [128, 128, 64], 16, 16)
+        g = torch.tanh(cc_g)    # ( 1, [128, 128, 64], 16, 16)
 
         c_next = f * c_cur + i * g
         h_next = o * torch.tanh(c_next)
@@ -128,19 +139,19 @@ class PhyD_ConvLSTM_Cell(nn.Module):
 
 class PhyD_ConvLSTM(nn.Module):
 
-    def __init__(self, input_shape, input_dim, hidden_dims, n_layers, kernel_size, device):
+    def __init__(self, input_shape, input_dim, hidden_dims, n_layers, kernel_size, device): # (16, 16), 64, [128,128,64], 3, (3, 3), configs.device
         super(PhyD_ConvLSTM, self).__init__()
-        self.input_shape = input_shape
-        self.input_dim = input_dim
-        self.hidden_dims = hidden_dims
-        self.n_layers = n_layers
-        self.kernel_size = kernel_size
+        self.input_shape = input_shape  #(16, 16)
+        self.input_dim = input_dim  #64
+        self.hidden_dims = hidden_dims  # [128,128,64]
+        self.n_layers = n_layers    # 3
+        self.kernel_size = kernel_size  #(3, 3)
         self.H, self.C = [], []   
-        self.device = device
+        self.device = device    # configs.device
         
         cell_list = []
-        for i in range(0, self.n_layers):
-            cur_input_dim = self.input_dim if i == 0 else self.hidden_dims[i-1]
+        for i in range(0, self.n_layers):   #注册Phy_ConvLSTM不同的层
+            cur_input_dim = self.input_dim if i == 0 else self.hidden_dims[i-1] # 64, 128, 128
             print('layer ', i, 'input dim ', cur_input_dim, ' hidden dim ', self.hidden_dims[i])
             cell_list.append(PhyD_ConvLSTM_Cell(input_shape=self.input_shape,
                                                 input_dim=cur_input_dim,
@@ -148,26 +159,27 @@ class PhyD_ConvLSTM(nn.Module):
                                                 kernel_size=self.kernel_size))
         self.cell_list = nn.ModuleList(cell_list)
 
-    def forward(self, input_, first_timestep=False): # input_ [batch_size, 1, channels, width, height]
+    def forward(self, input_, first_timestep=False): # input_ [1, 64, 16, 16]
         batch_size = input_.data.size()[0]
-        if (first_timestep):   
-            self.initHidden(batch_size) # init Hidden at each forward start
+        if (first_timestep):   #如果是第一次前向传播，初始化隐藏状态
+            self.initHidden(batch_size) 
+
         for j, cell in enumerate(self.cell_list):
             self.H[j] = self.H[j].to(input_.device)
             self.C[j] = self.C[j].to(input_.device)
             if j==0: # bottom layer
-                self.H[j], self.C[j] = cell(input_, (self.H[j],self.C[j]))
+                self.H[j], self.C[j] = cell(input_, (self.H[j],self.C[j]))  #x, hidden
             else:
                 self.H[j], self.C[j] = cell(self.H[j-1],(self.H[j],self.C[j]))
         return (self.H,self.C) , self.H   # (hidden, output)
     
     def initHidden(self,batch_size):
         self.H, self.C = [],[]  
-        for i in range(self.n_layers):
+        for i in range(self.n_layers):  # for 3 layers
             self.H.append(torch.zeros(
-                batch_size, self.hidden_dims[i], self.input_shape[0], self.input_shape[1]).to(self.device))
+                batch_size, self.hidden_dims[i], self.input_shape[0], self.input_shape[1]).to(self.device)) # b, [128,128,64], 16, 16 PhyCell->ConvLSTM
             self.C.append(torch.zeros(
-                batch_size, self.hidden_dims[i], self.input_shape[0], self.input_shape[1]).to(self.device))
+                batch_size, self.hidden_dims[i], self.input_shape[0], self.input_shape[1]).to(self.device)) # b, [128,128,64], 16, 16 ConvLSTM->ConvLSTM
     
     def setHidden(self, hidden):
         H,C = hidden

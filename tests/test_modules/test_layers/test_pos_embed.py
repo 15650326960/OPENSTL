@@ -1,5 +1,5 @@
 import torch
-from openstl.models.utils.layers import ConditionalPositionEncoding
+from ope.models.utils.layers import ConditionalPositionEncoding
 
 
 def test_conditional_position_encoding_module():

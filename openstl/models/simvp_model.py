@@ -1,13 +1,9 @@
 import torch
 from torch import nn
-import torch.nn.functional as F 
 
 from openstl.modules import (ConvSC, ConvNeXtSubBlock, ConvMixerSubBlock, GASubBlock, gInception_ST,
                              HorNetSubBlock, MLPMixerSubBlock, MogaSubBlock, PoolFormerSubBlock,
                              SwinSubBlock, UniformerSubBlock, VANSubBlock, ViTSubBlock, TAUSubBlock)
-import sys
-sys.path.append('/home/jianhao/methods/OPENSTL/openstl/models')
-from moe import CMDAF, CMDAF1, CMDAF2, CMDAF3
 
 
 class SimVP_Model(nn.Module):
@@ -26,9 +22,7 @@ class SimVP_Model(nn.Module):
         H, W = int(H / 2**(N_S/2)), int(W / 2**(N_S/2))  # downsample 1 / 2**(N_S/2)
         act_inplace = False
         self.enc = Encoder(C, hid_S, N_S, spatio_kernel_enc, act_inplace=act_inplace)
-        self.dec1 = Decoder1(hid_S, C, N_S, spatio_kernel_dec, act_inplace=act_inplace)
-        self.dec2 = Decoder2(hid_S, C, N_S, spatio_kernel_dec, act_inplace=act_inplace)
-        self.dec3 = Decoder3(hid_S, C, N_S, spatio_kernel_dec, act_inplace=act_inplace)
+        self.dec = Decoder(hid_S, C, N_S, spatio_kernel_dec, act_inplace=act_inplace)
 
         model_type = 'gsta' if model_type is None else model_type.lower()
         if model_type == 'incepu':
@@ -49,21 +43,8 @@ class SimVP_Model(nn.Module):
         hid = self.hid(z)
         hid = hid.reshape(B*T, C_, H_, W_)
 
-        Y1 = self.dec1(hid, skip)
-        Y2 = self.dec2(hid, skip)
-        Y3 = self.dec3(hid, skip)
-        
-        # w1 = F.gelu(Y1)
-        
-        w1 = F.softmax(Y1, dim=1)
-        w2 = F.softmax(Y2, dim=1)
-        w3 = F.softmax(Y3, dim=1)
-        
-        # w2 = F.gelu(Y2)
-        # w3 = F.gelu(Y3)
-        
-        Y = (Y1 * w1 + Y2 * w2 + Y3 * w3) / 3
-        Y = Y.reshape(B, T, C, H, W) #[1, 12, 1, 32, 64])
+        Y = self.dec(hid, skip)
+        Y = Y.reshape(B, T, C, H, W)
         return Y
 
 
@@ -94,12 +75,12 @@ class Encoder(nn.Module):
         return latent, enc1
 
 
-class Decoder1(nn.Module):
+class Decoder(nn.Module):
     """3D Decoder for SimVP"""
 
     def __init__(self, C_hid, C_out, N_S, spatio_kernel, act_inplace=True):
         samplings = sampling_generator(N_S, reverse=True)
-        super(Decoder1, self).__init__()
+        super(Decoder, self).__init__()
         self.dec = nn.Sequential(
             *[ConvSC(C_hid, C_hid, spatio_kernel, upsampling=s,
                      act_inplace=act_inplace) for s in samplings[:-1]],
@@ -111,38 +92,10 @@ class Decoder1(nn.Module):
     def forward(self, hid, enc1=None):
         for i in range(0, len(self.dec)-1):
             hid = self.dec[i](hid)
-        Y = self.dec[-1](CMDAF(hid ,enc1))
-        
-        Y = self.readout(Y)
-        return Y
-    
-class Decoder2(Decoder1):
-    """3D Decoder for SimVP"""
-
-    def __init__(self, C_hid, C_out, N_S, spatio_kernel, act_inplace=True):
-        samplings = sampling_generator(N_S, reverse=True)
-        super(Decoder2, self).__init__(C_hid, C_out, N_S, spatio_kernel, act_inplace=True)
-
-    def forward(self, hid, enc1=None):
-        for i in range(0, len(self.dec)-1):
-            hid = self.dec[i](hid)
-        Y = self.dec[-1](CMDAF1(hid ,enc1))
+        Y = self.dec[-1](hid + enc1)
         Y = self.readout(Y)
         return Y
 
-class Decoder3(Decoder1):
-    """3D Decoder for SimVP"""
-
-    def __init__(self, C_hid, C_out, N_S, spatio_kernel, act_inplace=True):
-        samplings = sampling_generator(N_S, reverse=True)
-        super(Decoder3, self).__init__(C_hid, C_out, N_S, spatio_kernel, act_inplace=True)
-
-    def forward(self, hid, enc1=None):
-        for i in range(0, len(self.dec)-1):
-            hid = self.dec[i](hid)
-        Y = self.dec[-1](CMDAF2(hid ,enc1))
-        Y = self.readout(Y)
-        return Y
 
 class MidIncepNet(nn.Module):
     """The hidden Translator of IncepNet for SimVPv1"""
@@ -292,21 +245,3 @@ class MidMetaNet(nn.Module):
 
         y = z.reshape(B, T, C, H, W)
         return y
-
-if __name__ == '__main__':
-    Decoder_model = Decoder1(32,1,2,3)
-    Encoder_model = Encoder(1,32,2,3)
-    hid_model = MidMetaNet(384, 256, 8,(16,32),'poolformer',8,0.0,0.1)
-    
-    x = torch.randn(12, 32, 16, 32)
-    y = torch.randn(12, 32, 32, 64)
-    x_e = torch.randn(12, 1, 32, 64)
-    
-    z = Decoder_model(x,y)
-    z_e = Encoder_model(x_e)
-    
-    
-    trainable_params = sum(p.numel() for p in Decoder_model.parameters() if p.requires_grad)
-    trainable_params = sum(p.numel() for p in Encoder_model.parameters() if p.requires_grad)
-    print(f"可训练参数量: {trainable_params / 1e6:.2f}M")
-    

@@ -1,6 +1,6 @@
 import pytest
 
-from openstl.models import PredRNN_Model
+from ope.models import PredRNN_Model
 
 
 def test_assertion():

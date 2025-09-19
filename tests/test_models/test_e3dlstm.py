@@ -1,6 +1,6 @@
 import pytest
 
-from openstl.models import E3DLSTM_Model
+from ope.models import E3DLSTM_Model
 
 
 def test_assertion():
