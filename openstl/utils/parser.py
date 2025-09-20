@@ -104,7 +104,7 @@ def create_parser():
                         help='Whether to set the weight decay of bias and bn to 0')
 
     # lightning
-    parser.add_argument('--gpus', nargs='+', default=[1], type=int)
+    parser.add_argument('--gpus', nargs='+', default=[0], type=int)
     parser.add_argument('--metric_for_bestckpt', default='val_loss', type=str)
     parser.add_argument('--ckpt_path', default=None, type=str)
 

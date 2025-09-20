@@ -114,11 +114,13 @@ class FusionDataset(Dataset):
                 # 只提取第二个通道的降水数据
                 precipitation_data = daily_data[:, 1:2, :, :]  # (144, 1, 500, 900)
                 
-                # 处理NaN值
-                filled_data = self._interpolate_nans(precipitation_data.copy())
+                # 处理缺失值：将-999、NaN和负值都设置为0
+                precipitation_data[precipitation_data < -100] = 0.0  # 处理-999等缺失值标记
+                precipitation_data[precipitation_data < 0] = 0.0     # 降水不能为负值
+                precipitation_data[np.isnan(precipitation_data)] = 0.0  # NaN值设为0
                 
                 # 转换为torch张量
-                filled_data = torch.from_numpy(filled_data).float()
+                filled_data = torch.from_numpy(precipitation_data).float()
                 
                 # 下采样处理
                 if self.downsample_ratio > 1:

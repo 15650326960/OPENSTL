@@ -123,6 +123,16 @@ def CSI(hits, fas, misses, eps=1e-6):
     csi = (hits + eps) / (hits + misses + fas + eps)
     return np.mean(csi)
 
+def FAR(hits, fas, eps=1e-6):
+    """
+    false_alarm_rate
+    Inputs:
+    Outputs:
+        far = false_alarms / (hits + false_alarms) averaged over the D channels
+    """
+    far = (fas + eps) / (hits + fas + eps)
+    return np.mean(far)
+
 def sevir_metrics(pred, true, threshold):
     """
     calcaulate t, p, hits, fas, misses
@@ -190,7 +200,7 @@ def metric(pred, true, mean=None, std=None, metrics=['mae', 'mse'],
         true = true * std + mean
     eval_res = {}
     eval_log = ""
-    allowed_metrics = ['mae', 'mse', 'rmse', 'ssim', 'psnr', 'snr', 'lpips', 'pod', 'sucr', 'csi']
+    allowed_metrics = ['mae', 'mse', 'rmse', 'ssim', 'psnr', 'snr', 'lpips', 'pod', 'sucr', 'csi', 'far']
     invalid_metrics = set(metrics) - set(allowed_metrics)
     if len(invalid_metrics) != 0:
         raise ValueError(f'metric {invalid_metrics} is not supported.')
@@ -234,11 +244,29 @@ def metric(pred, true, mean=None, std=None, metrics=['mae', 'mse'],
                 rmse_sum += eval_res[f'rmse_{str(c_name)}']
             eval_res['rmse'] = rmse_sum / c_group
 
-    if 'pod' in metrics:
-        hits, fas, misses = sevir_metrics(pred, true, threshold)
-        eval_res['pod'] = POD(hits, misses)
-        eval_res['sucr'] = SUCR(hits, fas)
-        eval_res['csi'] = CSI(hits, fas, misses) 
+    if 'pod' in metrics or 'csi' in metrics or 'far' in metrics:
+        # 使用多个阈值计算气象指标，对应0.1mm/h, 1mm/h, 5mm/h
+        thresholds = [0.1, 1.0, 5.0]  # 使用实际降水强度阈值
+        
+        # 计算多个阈值的平均指标（或者可以选择特定阈值）
+        pod_scores, csi_scores, far_scores = [], [], []
+        
+        for thresh in thresholds:
+            hits, fas, misses = sevir_metrics(pred, true, thresh)
+            if 'pod' in metrics:
+                pod_scores.append(POD(hits, misses))
+            if 'csi' in metrics:
+                csi_scores.append(CSI(hits, fas, misses))
+            if 'far' in metrics:
+                far_scores.append(FAR(hits, fas))
+        
+        # 使用第一个阈值(0.1mm/h)的结果作为主要指标
+        if 'pod' in metrics and pod_scores:
+            eval_res['pod'] = pod_scores[0]  # 0.1mm/h阈值的POD
+        if 'csi' in metrics and csi_scores:
+            eval_res['csi'] = csi_scores[0]  # 0.1mm/h阈值的CSI
+        if 'far' in metrics and far_scores:
+            eval_res['far'] = far_scores[0]  # 0.1mm/h阈值的FAR 
         
     pred = np.maximum(pred, clip_range[0])
     pred = np.minimum(pred, clip_range[1])
