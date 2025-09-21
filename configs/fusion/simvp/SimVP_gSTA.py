@@ -8,7 +8,7 @@ hid_T = 256  # 从512减少到256
 N_T = 4  # 从8减少到4
 N_S = 2  # 从4减少到2
 # training
-lr = 1e-3
+lr = 1e-4
 batch_size = 1  # 使用最小的batch size
 drop_path = 0.05  # 减小drop_path
 sched = 'onecycle'
